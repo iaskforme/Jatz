@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fitsSystemWindows="true" android:background="@color/colorPrimary">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="56dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Name" android:id="@+id/nameText"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email" android:id="@+id/emailText"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password" android:id="@+id/passText" android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Repeat password" android:id="@+id/repeatpassText" android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="72dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/signupButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_marginBottom="19dp"
+                    android:padding="12dp"
+                    android:text="create account"
+                    android:textColor="#545454"
+                    android:layout_alignParentEnd="true" android:layout_marginEnd="87dp"
+                    android:layout_alignParentStart="true" android:layout_marginStart="89dp"
+                    android:layout_alignParentBottom="true" android:layout_marginTop="8dp"
+                    android:layout_alignParentTop="true" android:background="@drawable/loginboton"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView android:id="@+id/loginText"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginBottom="24dp"
+                      android:text="You have an account? Login"
+                      android:gravity="center"
+                      android:textSize="16sp"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>
