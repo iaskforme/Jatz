@@ -2,15 +2,28 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:fitsSystemWindows="true" android:background="@color/colorPrimary">
+            android:fitsSystemWindows="true"
+            android:background="@color/colorPrimary">
 
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="56dp"
+            android:id="@+id/linearLayuout"
             android:paddingLeft="24dp"
             android:paddingRight="24dp">
+
+        <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:visibility="invisible"
+                android:indeterminate="true"
+                android:background="@color/colorPrimary"
+                android:indeterminateTint="@color/colorAccent"
+                android:layout_below="@+id/linearLayuout"/>
 
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
