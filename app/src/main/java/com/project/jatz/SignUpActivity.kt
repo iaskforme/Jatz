@@ -72,7 +72,7 @@ class SignUpActivity: AppCompatActivity() {
      * Function that contains the connection with the database as a user with the singUpInBackground method once ParseUser its created
      *
      * @param ParseUser instance for singUpInBackground run
-     * @return
+     *
      */
     fun signingUp(user: ParseUser){
 
@@ -99,6 +99,9 @@ class SignUpActivity: AppCompatActivity() {
 
      }
 
+    /**
+     * Returns a toast if the signup fails
+     */
     fun faieldSigningUp(){
         Toast.makeText(this, "Fail to signup!", Toast.LENGTH_SHORT)
     }
