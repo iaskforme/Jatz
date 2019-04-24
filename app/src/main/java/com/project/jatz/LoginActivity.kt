@@ -76,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
         userQuery.findInBackground(FindCallback { users, e ->
             if (e == null){
 
-                ParseUser.logInInBackground(users.get(0).username, userpassword!!.text.toString(), LogInCallback { user, e ->
+                ParseUser.logInInBackground(users.get(0).username, userpassword!!.text.toString(), LogInCallback { user, a ->
 
                     if(user != null){
 
@@ -88,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
 
                     }else{
                         ParseUser.logOut();
-                        Toast.makeText(this, e.message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, a.message, Toast.LENGTH_LONG).show();
                     }
 
                 })
