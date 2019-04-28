@@ -16,7 +16,6 @@ class LoginActivity : AppCompatActivity() {
     var signupText: TextView? = null
     var useremail: TextInputEditText? = null
     var userpassword: TextInputEditText? = null
-    var name: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
         var userQuery: ParseQuery<ParseUser> = ParseUser.getQuery().whereEqualTo("email",useremail!!.text.toString())
 
         userQuery.findInBackground(FindCallback { users, e ->
-            if (e == null){
+            if (e == null && users.size != 0){
 
                 ParseUser.logInInBackground(users.get(0).username, userpassword!!.text.toString(), LogInCallback { user, a ->
 
@@ -94,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
                 })
 
             }else{
-                Log.d("FAIL", e.message)
+                useremail!!.setError("Email adress does not mach any user")
             }
 
         })
