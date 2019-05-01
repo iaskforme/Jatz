@@ -9,8 +9,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_fragment_one.*
-
 
 class FragmentOne : Fragment() {
 
@@ -22,6 +20,8 @@ class FragmentOne : Fragment() {
 
         var notesList = ArrayList<NoteItem>()
         notesList.add(NoteItem("Título1","Subtitulo"))
+
+
         notesList.add(NoteItem("Título2","Subtitulo"))
         notesList.add(NoteItem("Título3","Subtitulo"))
         notesList.add(NoteItem("Título4","Subtitulo"))
