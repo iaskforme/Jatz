@@ -3,6 +3,8 @@ package com.project.jatz
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -25,8 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         handleFab(floatButton!!)
 
-        // Zona de adaptadores para fragmentos
-
+        // Zona de adaptadores para fragmentos ()
         val fragmentAdapter = SecondAdapter(supportFragmentManager)
         fragmentAdapter.addFragment(FragmentOne(), "To Do")
         fragmentAdapter.addFragment(FragmentTwo(), "In Progress")
@@ -57,5 +58,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.bottom_app_bar, menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.bottom_app_home -> Toast.makeText(this,"Home item is clicked!", Toast.LENGTH_SHORT).show()
+            R.id.bottom_app_options -> Toast.makeText(this,"Settings item is clicked!", Toast.LENGTH_SHORT).show()
+
+            android.R.id.home -> {
+                val bottomNavDrawerFragment = BottomNavigationSheetFragment()
+                bottomNavDrawerFragment.show(supportFragmentManager, bottomNavDrawerFragment.tag)
+            }
+        }
+
+        return true
     }
 }
