@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         handleFab(floatButton!!)
 
+
         // Zona de adaptadores para fragmentos ()
         val fragmentAdapter = SecondAdapter(supportFragmentManager)
         fragmentAdapter.addFragment(FragmentOne(), "To Do")
@@ -44,14 +46,13 @@ class MainActivity : AppCompatActivity() {
             fabTapped = !fabTapped
 
             if (fabTapped) {
+                FragmentOne.adding(FragmentOne.adapter!!)
                 bottomBar!!.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
                 floatButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_close_black_24dp))
             } else {
                 bottomBar!!.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
                 floatButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add_black_24dp))
             }
-
-
         }
     }
 
@@ -73,4 +74,6 @@ class MainActivity : AppCompatActivity() {
 
         return true
     }
+
+
 }

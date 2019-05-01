@@ -46,7 +46,8 @@ class MainAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<Custo
     }
 
     fun addItem(){
-
+        itemList.add(NoteItem("Hola","Holita"))
+        notifyDataSetChanged()
     }
 }
 

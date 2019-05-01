@@ -92,7 +92,7 @@ class SignUpActivity: AppCompatActivity() {
             } else {
                 progressBar.visibility = View.INVISIBLE
                 ParseUser.logOut()
-                Toast.makeText(this, "Something went wrong... \nUser ${user.username} wasn't created", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Something went wrong... \nUser ${user.username} wasn't created. Try again", Toast.LENGTH_SHORT).show()
             }
         })
 

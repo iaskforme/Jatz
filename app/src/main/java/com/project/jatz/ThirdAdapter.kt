@@ -1,9 +1,11 @@
 package com.project.jatz
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 
@@ -37,15 +39,11 @@ class ThirdAdapter(val itemList: ArrayList<BoardItem>): RecyclerView.Adapter<Cus
 
         itemList.removeAt(viewHolder.adapterPosition)
         notifyItemRemoved(viewHolder.adapterPosition)
-
-        Snackbar.make(viewHolder.itemView,"${removedItem!!.textLineOne.toString()} removed", Snackbar.LENGTH_LONG).setAction("UNDO"){
-            itemList.add(removedItemPosition, removedItem!!)
-            notifyItemInserted(removedItemPosition)
-        }.show()
     }
 
     fun addItem(){
-
+        itemList.add(BoardItem("Hola"))
+        notifyDataSetChanged()
     }
 }
 
