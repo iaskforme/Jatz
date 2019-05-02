@@ -2,18 +2,15 @@ package com.project.jatz
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.activity_main.*
+import com.parse.Parse.getApplicationContext
 
 class FragmentOne : Fragment() {
 
@@ -36,9 +33,6 @@ class FragmentOne : Fragment() {
         notesList.add(NoteItem("Título1","Subtitulo"))
         notesList.add(NoteItem("Título2","Subtitulo"))
         notesList.add(NoteItem("Título3","Subtitulo"))
-        notesList.add(NoteItem("Título4","Subtitulo"))
-        notesList.add(NoteItem("Título4","Subtitulo"))
-        notesList.add(NoteItem("Título4","Subtitulo"))
         notesList.add(NoteItem("Título4","Subtitulo"))
 
 

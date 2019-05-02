@@ -3,13 +3,14 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_testing">Testing</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="username">Username</string>
+    <string name="you_have_an_account_login">You have an account? Login</string>
+    <string name="create_account">create account</string>
+    <string name="parse_server_url">https://parseapi.back4app.com/</string>
+    <string name="parse_app_id">WpK0tvBCi90tvdNFO2t5QF0gepQOj7jNLGHmNFyY</string>
+    <string name="parse_client_key">sOZdZqL8cnZaJ4bb3bhE9RmnOSU4VQ3tkOrlRhMC</string>
+    <string name="create_an_account">Create an account</string>
 </resources>

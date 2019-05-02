@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:fitsSystemWindows="true" android:background="@color/colorPrimary">
 
+    <!--Layout that contains everything under the scrollview-->
     <LinearLayout
+            android:id="@+id/login_linear_layout"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -13,42 +14,47 @@
             android:paddingLeft="24dp"
             android:paddingRight="24dp">
 
-        <ImageView android:src="@drawable/jatzlogo"
-                   android:layout_width="340dp"
-                   android:layout_height="219dp"
-                   android:layout_marginBottom="24dp"
-                   android:layout_gravity="center_horizontal"
-                   android:contentDescription="TODO"/>
+        <!--ImageView pointing the logo file-->
+        <ImageView
+                android:src="@drawable/image_jatz_logo"
+                android:layout_width="340dp"
+                android:layout_height="219dp"
+                android:layout_marginBottom="24dp"
+                android:layout_gravity="center_horizontal"/>
 
-        <!--  Email Label -->
-
+        <!--Email EditText and its layout-->
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
             <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login_email_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email" android:id="@+id/emailText"/>
+                    android:hint="@string/email"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--  Password Label -->
-
+        <!--Password EditText and its layout-->
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
             <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login_password_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/password" android:id="@+id/passwordText" android:inputType="textPassword"/>
+                    android:hint="@string/password"
+                    android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
+
+        <!--RelativeLayout providing position stability to login button-->
         <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="72dp">
 
+            <!--Button that executes verification and logs in-->
             <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/loginButton"
+                    android:id="@+id/login_button"
                     android:layout_width="139dp"
                     android:layout_height="50dp"
                     android:layout_marginBottom="14dp"
@@ -58,16 +64,18 @@
                     android:layout_alignParentEnd="true" android:layout_marginEnd="106dp"
                     android:layout_alignParentStart="true" android:layout_marginStart="118dp"
                     android:layout_alignParentBottom="true" android:layout_marginTop="8dp"
-                    android:layout_alignParentTop="true" android:background="@drawable/loginboton"/>
+                    android:layout_alignParentTop="true" android:background="@drawable/shape_round_button"/>
         </RelativeLayout>
 
-        <TextView android:id="@+id/signupText"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="24dp"
-                  android:text="Create an account"
-                  android:gravity="center"
-                  android:textSize="16sp"/>
+        <!-- TextView that launchs SignUpActivity -->
+        <TextView
+                android:id="@+id/login_signup_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="@string/create_an_account"
+                android:gravity="center"
+                android:textSize="16sp"/>
 
     </LinearLayout>
 

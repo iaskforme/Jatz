@@ -1,45 +1,28 @@
-package com.project.jatz
+package com.project.jatz.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputEditText
 import com.parse.*
+import com.project.jatz.R
+import kotlinx.android.synthetic.main.activity_login.*
 
+/**
+ * This class contains the activity used for loginin by users already created
+ */
 class LoginActivity : AppCompatActivity() {
-
-    var loginbutton: Button? =  null
-    var signupText: TextView? = null
-    var useremail: TextInputEditText? = null
-    var userpassword: TextInputEditText? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        loginbutton =  findViewById<Button>(R.id.loginButton)
-        signupText = findViewById<TextView>(R.id.signupText)
-        useremail = findViewById<TextInputEditText>(R.id.emailText)
-        userpassword = findViewById<TextInputEditText>(R.id.passwordText)
-
-        Parse.initialize(
-            Parse.Configuration.Builder(this)
-                .applicationId("WpK0tvBCi90tvdNFO2t5QF0gepQOj7jNLGHmNFyY")
-                .clientKey("sOZdZqL8cnZaJ4bb3bhE9RmnOSU4VQ3tkOrlRhMC")
-                .server("https://parseapi.back4app.com/")
-                .build()
-        )
 
         ParseInstallation.getCurrentInstallation().saveInBackground()
 
         /**
          * Listener for login button that executes loginUser function
          */
-        loginbutton!!.setOnClickListener{
+        login_button.setOnClickListener{
 
             loginUser()
 
@@ -48,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
         /**
          * Listener for singup text that starts SignUpActivity
          */
-        signupText!!.setOnClickListener{
+        login_signup_text.setOnClickListener{
 
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
@@ -70,12 +53,12 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        var userQuery: ParseQuery<ParseUser> = ParseUser.getQuery().whereEqualTo("email",useremail!!.text.toString())
+        var userQuery: ParseQuery<ParseUser> = ParseUser.getQuery().whereEqualTo("email",login_email_edittext.text.toString())
 
         userQuery.findInBackground(FindCallback { users, e ->
             if (e == null && users.size != 0){
 
-                ParseUser.logInInBackground(users.get(0).username, userpassword!!.text.toString(), LogInCallback { user, a ->
+                ParseUser.logInInBackground(users.get(0).username, login_password_edittext.text.toString(), LogInCallback { user, a ->
 
                     if(user != null){
 
@@ -93,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
                 })
 
             }else{
-                useremail!!.setError("Email adress does not mach any user")
+                login_email_edittext.setError("Email adress does not mach any user")
             }
 
         })
@@ -106,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
     fun onLoginFailed() {
         Toast.makeText(baseContext, "Login failed", Toast.LENGTH_LONG).show()
 
-        loginbutton!!.setEnabled(true)
+        login_button.setEnabled(true)
     }
 
     /**
@@ -117,21 +100,21 @@ class LoginActivity : AppCompatActivity() {
     fun validate(): Boolean {
         var valid = true
 
-        val email = useremail!!.getText().toString()
-        val password = userpassword!!.getText().toString()
+        val email = login_email_edittext.text.toString()
+        val password = login_password_edittext.text.toString()
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            useremail!!.setError("Enter a valid email address")
+            login_email_edittext.setError("Enter a valid email address")
             valid = false
         } else {
-            useremail!!.setError(null)
+            login_email_edittext.setError(null)
         }
 
         if (password.isEmpty() || password.length < 4 || password.length > 10) {
-            userpassword!!.setError("Between 4 and 10 alphanumeric characters")
+            login_password_edittext.setError("Between 4 and 10 alphanumeric characters")
             valid = false
         } else {
-            userpassword!!.setError(null)
+            login_password_edittext.setError(null)
         }
 
         return valid
