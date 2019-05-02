@@ -1,8 +1,9 @@
-package com.project.jatz
+package com.project.jatz.database
 
 import android.app.Application
 import com.parse.Parse
 import com.parse.ParseInstallation
+import com.project.jatz.R
 
 /**
  * Class that contains Parse initialization

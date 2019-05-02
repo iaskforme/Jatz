@@ -1,4 +1,4 @@
-package com.project.jatz
+package com.project.jatz.model
 
 class NoteItem(textLine1: String, textLine2: String){
 

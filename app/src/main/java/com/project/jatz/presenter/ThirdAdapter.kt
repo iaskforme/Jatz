@@ -1,13 +1,12 @@
-package com.project.jatz
+package com.project.jatz.presenter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
+import com.project.jatz.R
+import com.project.jatz.model.BoardItem
 
 // Binding betwen items and recyclerView
 class ThirdAdapter(val itemList: ArrayList<BoardItem>): RecyclerView.Adapter<CustomViewHolderDrawer>(){

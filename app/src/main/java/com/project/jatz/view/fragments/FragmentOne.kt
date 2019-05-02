@@ -1,4 +1,4 @@
-package com.project.jatz
+package com.project.jatz.view.fragments
 
 
 import android.os.Bundle
@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_fragment_one.*
+import com.project.jatz.presenter.MainAdapter
+import com.project.jatz.R
+import com.project.jatz.model.NoteItem
 
+class FragmentOne : Fragment() {
 
-class FragmentTwo : Fragment() {
-
+    //Float Button
     companion object {
         var adapter: MainAdapter? = null
 
@@ -25,28 +27,30 @@ class FragmentTwo : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
+
     ): View? {
 
         var notesList = ArrayList<NoteItem>()
-        notesList.add(NoteItem("Título4","Subtitulo"))
-        notesList.add(NoteItem("Título3","Subtitulo"))
-        notesList.add(NoteItem("Título2","Subtitulo"))
-        notesList.add(NoteItem("Título1","Subtitulo"))
+        notesList.add(NoteItem("Título1", "Subtitulo"))
+        notesList.add(NoteItem("Título2", "Subtitulo"))
+        notesList.add(NoteItem("Título3", "Subtitulo"))
+        notesList.add(NoteItem("Título4", "Subtitulo"))
+
 
         val rootView = inflater.inflate(R.layout.fragment_fragment_one, container, false)
 
         val recyclerView = rootView.findViewById(R.id.recyclerView) as RecyclerView
 
         var layoutManager = LinearLayoutManager(activity)
-        FragmentTwo.adapter = MainAdapter(notesList)
+        adapter = MainAdapter(notesList)
 
-        recyclerView.adapter = FragmentTwo.adapter
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
 
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                FragmentTwo.adapter!!.removeItem(viewHolder)
+                adapter!!.removeItem(viewHolder)
             }
 
             override fun onMove(
@@ -67,6 +71,6 @@ class FragmentTwo : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    }
 
+    }
 }

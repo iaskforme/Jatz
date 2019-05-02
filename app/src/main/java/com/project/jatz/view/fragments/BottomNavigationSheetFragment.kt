@@ -1,14 +1,16 @@
-package com.project.jatz
+package com.project.jatz.view.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.project.jatz.R
+import com.project.jatz.presenter.ThirdAdapter
+import com.project.jatz.model.BoardItem
 
 class BottomNavigationSheetFragment: BottomSheetDialogFragment() {
 

@@ -1,4 +1,4 @@
-package com.project.jatz.activities
+package com.project.jatz.view.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -53,16 +53,15 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        var userQuery: ParseQuery<ParseUser> = ParseUser.getQuery().whereEqualTo("email",login_email_edittext.text.toString())
+        var userEmailQuery: ParseQuery<ParseUser> = ParseUser.getQuery().whereEqualTo("email",login_email_edittext.text.toString())
 
-        userQuery.findInBackground(FindCallback { users, e ->
+        userEmailQuery.findInBackground(FindCallback { users, e ->
+
             if (e == null && users.size != 0){
-
                 ParseUser.logInInBackground(users.get(0).username, login_password_edittext.text.toString(), LogInCallback { user, a ->
 
                     if(user != null){
-
-                        Toast.makeText(this, "Welcome ${user.username}!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Welcome ${user.get("name")}!", Toast.LENGTH_SHORT).show()
 
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)

@@ -1,9 +1,8 @@
-package com.project.jatz.activities
+package com.project.jatz.view.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.AnimationUtils
 import com.parse.ParseUser
 import com.project.jatz.R
@@ -31,7 +30,6 @@ class SplashActivity : AppCompatActivity() {
             }finally {
 
                 if (currentUser != null) {
-                    Log.e("LAMEGATAG",ParseUser.getCurrentUser().username.toString())
                     val mainActivityLaunch = Intent(this, MainActivity::class.java)
                     startActivity(mainActivityLaunch)
                     finish()

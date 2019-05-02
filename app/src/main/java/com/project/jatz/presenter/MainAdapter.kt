@@ -1,4 +1,4 @@
-package com.project.jatz
+package com.project.jatz.presenter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.project.jatz.R
+import com.project.jatz.model.NoteItem
 
 // Binding betwen items and recyclerView
 class MainAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<CustomViewHolder>(){
@@ -46,7 +48,7 @@ class MainAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<Custo
     }
 
     fun addItem(){
-        itemList.add(NoteItem("Hola","Holita"))
+        itemList.add(NoteItem("Hola", "Holita"))
         notifyDataSetChanged()
     }
 }

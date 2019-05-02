@@ -1,4 +1,4 @@
-package com.project.jatz.activities
+package com.project.jatz.view.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -46,7 +46,7 @@ class SignUpActivity: AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
-            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
+            overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out)
         }
     }
 

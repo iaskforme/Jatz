@@ -3,47 +3,52 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:background="@color/colorPrimary"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:background="@color/colorPrimary">
 
+    <!--CoordinatorLayout created for fragments-->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/frame"
+            android:id="@+id/main_coordinator_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+        <!--TabLayout containing tabs and the ViewPager for the Fragments-->
         <com.google.android.material.tabs.TabLayout
-                android:id="@+id/table"
+                android:id="@+id/main_tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 app:tabMode="fixed"
                 app:tabGravity="fill">
         </com.google.android.material.tabs.TabLayout>
 
+        <!--ViewPager is the one that places each fragment-->
         <androidx.viewpager.widget.ViewPager
-                android:id="@+id/viewPager"
+                android:id="@+id/main_view_pager"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent">
         </androidx.viewpager.widget.ViewPager>
 
+        <!--BottomAppBar that replaces the normal ActionBar, contains Button and others-->
         <com.google.android.material.bottomappbar.BottomAppBar
+                android:id="@+id/main_bottom_appbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.BottomAppBar"
                 android:backgroundTint="@color/colorAccent"
-                android:id="@+id/bottomAppBar"
                 android:layout_gravity="bottom"
                 app:navigationIcon="@drawable/ic_dehaze_black_24dp"
                 app:hideOnScroll="true"
-                app:layout_scrollFlags="scroll|enterAlways">
+                app:layout_scrollFlags="scroll|enterAlways"
+                style="@style/Widget.MaterialComponents.BottomAppBar">
         </com.google.android.material.bottomappbar.BottomAppBar>
 
+        <!--FAB that creates new note-->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/main_add_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:fabSize="normal"
                 android:src="@drawable/ic_add_black_24dp"
-                android:id="@+id/addButton"
-                app:layout_anchor="@id/bottomAppBar"/>
+                app:layout_anchor="@id/main_bottom_appbar"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

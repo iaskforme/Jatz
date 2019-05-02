@@ -1,4 +1,4 @@
-package com.project.jatz
+package com.project.jatz.model
 
 class BoardItem(textLine1: String){
 
