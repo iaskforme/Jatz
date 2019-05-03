@@ -9,7 +9,7 @@ import com.project.jatz.R
 import com.project.jatz.model.BoardItem
 
 // Binding betwen items and recyclerView
-class ThirdAdapter(val itemList: ArrayList<BoardItem>): RecyclerView.Adapter<CustomViewHolderDrawer>(){
+class ThirdAdapter(var itemList: ArrayList<BoardItem>): RecyclerView.Adapter<CustomViewHolderDrawer>(){
 
     private var removedItemPosition: Int = 0
     private var removedItem: BoardItem? = null

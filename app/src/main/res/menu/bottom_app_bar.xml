@@ -3,13 +3,17 @@
     <item
             android:id="@+id/bottom_app_home"
             android:title="Home"
-            android:icon="@drawable/ic_home_black_24dp"
+            android:icon="@drawable/ic_home_white_24dp"
             app:showAsAction="ifRoom"/>
 
     <item
-            android:id="@+id/bottom_app_options"
-            android:title="More"
-            android:icon="@drawable/ic_more_vert_black_24dp"
-            app:showAsAction="ifRoom"/>
+            android:id="@+id/bottom_app_delete"
+            android:title="Delete board"
+            app:showAsAction="never"/>
+
+    <item
+            android:id="@+id/bottom_app_logout"
+            android:title="Logout"
+            app:showAsAction="never"/>
 
 </menu>

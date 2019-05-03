@@ -16,16 +16,18 @@ import com.project.jatz.view.fragments.FragmentOne
 import com.project.jatz.view.fragments.FragmentThree
 import com.project.jatz.view.fragments.FragmentTwo
 import kotlinx.android.synthetic.main.activity_main.*
+import android.content.Intent
+import com.parse.ParseUser
+
 
 class MainActivity : AppCompatActivity() {
 
     var fabTapped: Boolean = false
+    val fragmentAdapter = SecondAdapter(supportFragmentManager)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val fragmentAdapter = SecondAdapter(supportFragmentManager)
 
         setSupportActionBar(main_bottom_appbar)
 
@@ -43,34 +45,24 @@ class MainActivity : AppCompatActivity() {
 
         floatButton.setOnClickListener {
 
-            fabTapped = !fabTapped
+            //IMPORTANTE PARA SABER QUE FRAGMENTO ESTA EN LA PANTALLA
+            var page = supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.main_view_pager+ ":" + main_view_pager.getCurrentItem())
 
-            if (fabTapped) {
-                //IMPORTANTE PARA SABER QUE FRAGMENTO ESTA EN LA PANTALLA
-                var page = supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.main_view_pager+ ":" + main_view_pager.getCurrentItem())
+            Log.v("TAG", "${page}")
 
-                Log.v("TAG", "${page}")
-
-                if (page is FragmentOne) {
-                    FragmentOne.adding(FragmentOne.adapter!!)
-                    Log.v("TAG", "To do page")
+            if (page is FragmentOne) {
+                FragmentOne.adding(FragmentOne.adapter!!)
+                Log.v("TAG", "To do page")
+            }else{
+                if(page is FragmentTwo) {
+                    FragmentTwo.adding(FragmentTwo.adapter!!)
+                    Log.v("TAG", "In progress page")
                 }else{
-                    if(page is FragmentTwo) {
-                        FragmentTwo.adding(FragmentTwo.adapter!!)
-                        Log.v("TAG", "In progress page")
-                    }else{
-                        if(page is FragmentThree) {
-                            FragmentThree.adding(FragmentThree.adapter!!)
-                            Log.v("TAG", "Done page")
-                        }
+                    if(page is FragmentThree) {
+                        FragmentThree.adding(FragmentThree.adapter!!)
+                        Log.v("TAG", "Done page")
                     }
                 }
-
-                main_bottom_appbar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-                floatButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_close_black_24dp))
-            } else {
-                main_bottom_appbar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-                floatButton.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_add_black_24dp))
             }
         }
     }
@@ -98,10 +90,14 @@ class MainActivity : AppCompatActivity() {
         when (item!!.itemId) {
 
             R.id.bottom_app_home -> {
-                Toast.makeText(this,"Home item is clicked!", Toast.LENGTH_SHORT).show()
+
+                main_view_pager.setCurrentItem(1)
             }
-            R.id.bottom_app_options -> {
-                Toast.makeText(this,"Settings item is clicked!", Toast.LENGTH_SHORT).show()
+            R.id.bottom_app_logout -> {
+                ParseUser.logOut()
+                var loginIntent = Intent(this, LoginActivity::class.java)
+                startActivity(loginIntent)
+                finish()
             }
 
             android.R.id.home -> {
