@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:fitsSystemWindows="true" android:background="@color/colorPrimary">
+            android:fitsSystemWindows="true"
+            android:background="@color/colorPrimary">
 
     <!--Layout that contains everything under the scrollview-->
     <LinearLayout

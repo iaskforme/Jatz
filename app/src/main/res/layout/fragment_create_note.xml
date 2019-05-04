@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_round_both_dialog">
+
+    <!--Main layout with all the content besides the one above-->
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginRight="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <!--Title of the dialog of the creation of a new note-->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New note"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                android:gravity="left"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+
+        <!--TextView with the description of what this dialog does-->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                android:textSize="16dp"
+                android:text="Type the content for a new note"/>
+
+        <!--EditText to write the name/title of the new note-->
+        <EditText
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/colorAccent"
+                android:hint="Note title"
+                android:textColorHint="@color/colorText"
+                android:textCursorDrawable="@null"
+                android:backgroundTint="@color/colorMainPrimary"/>
+
+        <!--EditText to write the description of the new note-->
+        <EditText
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="16dp"
+                android:textColor="@android:color/black"
+                android:hint="Edit note description..."
+                android:textColorHint="@color/colorText"
+                android:textCursorDrawable="@null"
+                android:backgroundTint="@color/colorText"/>
+
+        <!--EditText to write other comments for the new note-->
+        <EditText
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:textColor="@android:color/black"
+                android:layout_marginLeft="16dp"
+                android:hint="Add comment"
+                android:textColorHint="@color/colorText"
+                android:textCursorDrawable="@null"
+                android:backgroundTint="@color/colorText"/>
+
+        <!--RelativeLayout with two textviews containing the options of saving and canceling-->
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="150dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp"
+                    android:text="SAVE"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="210dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp"
+                    android:text="CANCEL"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

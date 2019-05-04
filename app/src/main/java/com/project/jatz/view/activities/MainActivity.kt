@@ -5,24 +5,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
-import androidx.core.content.ContextCompat
-import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.project.jatz.*
 import com.project.jatz.presenter.SecondAdapter
-import com.project.jatz.view.fragments.BottomNavigationSheetFragment
-import com.project.jatz.view.fragments.FragmentOne
-import com.project.jatz.view.fragments.FragmentThree
-import com.project.jatz.view.fragments.FragmentTwo
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
+import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.parse.ParseUser
+import com.project.jatz.view.fragments.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    var fabTapped: Boolean = false
     val fragmentAdapter = SecondAdapter(supportFragmentManager)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +30,6 @@ class MainActivity : AppCompatActivity() {
 
         handleFab(main_add_button)
 
-
     }
 
     /**
@@ -44,6 +38,10 @@ class MainActivity : AppCompatActivity() {
     private fun handleFab(floatButton: FloatingActionButton) {
 
         floatButton.setOnClickListener {
+
+            val dialog = CreateNoteFragment()
+            dialog.show(supportFragmentManager, dialog.tag)
+
 
             //IMPORTANTE PARA SABER QUE FRAGMENTO ESTA EN LA PANTALLA
             var page = supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.main_view_pager+ ":" + main_view_pager.getCurrentItem())
@@ -90,7 +88,6 @@ class MainActivity : AppCompatActivity() {
         when (item!!.itemId) {
 
             R.id.bottom_app_home -> {
-
                 main_view_pager.setCurrentItem(1)
             }
             R.id.bottom_app_logout -> {
@@ -108,6 +105,8 @@ class MainActivity : AppCompatActivity() {
 
         return true
     }
+
+
 
 
 }

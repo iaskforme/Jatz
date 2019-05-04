@@ -21,7 +21,7 @@ class MainAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<Custo
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        var cellRow = layoutInflater.inflate(R.layout.example_item, parent, false)
+        var cellRow = layoutInflater.inflate(R.layout.note_item, parent, false)
 
         return CustomViewHolder(cellRow)
     }

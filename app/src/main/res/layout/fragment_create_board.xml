@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@drawable/shape_round_both_dialog">
+
+    <!--Main layout with all the content besides the one above-->
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginRight="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <!--Title of the dialog of the creation of a new board-->
+        <TextView
+                android:id="@+id/fragmentboard_newboard_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New board"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                android:gravity="left"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+
+        <!--TextView with the description of what this dialog does-->
+        <TextView
+                android:id="@+id/fragmentboard_description_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                android:textSize="16dp"
+                android:text="This will create a new board with the name given below"/>
+
+        <!--EditText to write the name/title of the new board-->
+        <EditText
+                android:id="@+id/fragmentboard_boardname_edittext"
+                android:layout_width="280dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"/>
+
+        <!--RelativeLayout with two textviews containing the options of saving and canceling-->
+        <RelativeLayout
+                android:id="@+id/fragmentboard_options_relativelayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp">
+
+            <TextView
+                    android:id="@+id/fragmentboard_save_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="180dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp"
+                    android:text="SAVE"/>
+
+            <TextView
+                    android:id="@+id/fragmentboard_cancel_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="240dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp"
+                    android:text="CANCEL"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
