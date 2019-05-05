@@ -1,12 +1,14 @@
 package com.project.jatz.model
 
-class NoteItem(textLine1: String, textLine2: String){
+class NoteItem(title: String, description: String, comment: String){
 
-    var textLineOne: String = ""
-    var textLineTwo: String = ""
+    var noteTitle = ""
+    var noteDescription = ""
+    var noteComment = ""
 
     init {
-        textLineOne = textLine1
-        textLineTwo = textLine2
+        noteTitle = title
+        noteDescription = description
+        noteComment = comment
     }
 }

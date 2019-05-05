@@ -1,8 +1,8 @@
 package com.project.jatz.view.fragments
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,40 +14,41 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.project.jatz.R
 import com.project.jatz.presenter.ThirdAdapter
 import com.project.jatz.model.BoardItem
+import com.project.jatz.model.BoardList
 
 /**
  * Class that inherits from BottomSheetDialog and contains the parameters that allow the future creation of one
  */
-class BottomNavigationSheetFragment: BottomSheetDialogFragment() {
+class BottomNavigationSheetFragment: BottomSheetDialogFragment(){
+
+    companion object{
+        var recyclerView: RecyclerView? = null
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.ThemeOverlay_Material)
 
-        var boardList = ArrayList<BoardItem>()
-        boardList.add(BoardItem("Título1"))
-        boardList.add(BoardItem("Título2"))
-        boardList.add(BoardItem("Título3"))
-        boardList.add(BoardItem("Título4"))
-        boardList.add(BoardItem("Título5"))
-
+        var boardList = BoardList.list
+        boardList.add(BoardItem("Default Board"))
 
         val rootView = inflater.inflate(R.layout.fragment_bottomsheet, container, false)
 
-        var newBoard = rootView.findViewById<RelativeLayout>(R.id.fragmentbottomsheet_newboard_layout)
-
-        val recyclerView = rootView.findViewById(R.id.fragmentbottomsheet_items_recyclerview) as RecyclerView
+        val newBoard = rootView.findViewById<RelativeLayout>(R.id.fragmentbottomsheet_newboard_layout)
+        BottomNavigationSheetFragment.recyclerView = rootView.findViewById(R.id.fragmentbottomsheet_items_recyclerview) as RecyclerView
 
         var layoutManager = LinearLayoutManager(activity)
         var boardAdapter = ThirdAdapter(boardList)
 
-        recyclerView.adapter = boardAdapter
-        recyclerView.layoutManager = layoutManager
+        recyclerView!!.adapter = boardAdapter
+        recyclerView!!.layoutManager = layoutManager
 
-        newBoard.setOnClickListener{ rootView
+        newBoard.setOnClickListener {
 
             val dialog = CreateBoardFragment()
             dialog.show(fragmentManager, dialog.tag)
+
+            Log.e("LIST", boardAdapter.itemCount.toString())
         }
 
         return rootView

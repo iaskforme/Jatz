@@ -34,6 +34,7 @@
 
         <!--EditText to write the name/title of the new note-->
         <EditText
+                android:id="@+id/fragmentnote_title_edittext"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
@@ -47,6 +48,7 @@
 
         <!--EditText to write the description of the new note-->
         <EditText
+                android:id="@+id/fragmentnote_description_edittext"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:textSize="16dp"
@@ -60,6 +62,7 @@
 
         <!--EditText to write other comments for the new note-->
         <EditText
+                android:id="@+id/fragmentnote_comment_edittext"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:textSize="16dp"
@@ -78,6 +81,7 @@
                 android:layout_marginBottom="12dp">
 
             <TextView
+                    android:id="@+id/fragmentnote_save_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="150dp"
@@ -87,6 +91,7 @@
                     android:text="SAVE"/>
 
             <TextView
+                    android:id="@+id/fragmentnote_cancel_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="210dp"

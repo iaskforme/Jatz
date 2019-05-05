@@ -1,10 +1,10 @@
 package com.project.jatz.model
 
-class BoardItem(textLine1: String){
+class BoardItem(title: String){
 
-    var textLineOne: String = ""
+    var boardTitle: String = ""
 
     init {
-        textLineOne = textLine1
+        boardTitle = title
     }
 }

@@ -18,6 +18,7 @@ class FragmentTwo : Fragment() {
 
     companion object {
         var adapter: MainAdapter? = null
+        var recyclerView: RecyclerView? = null
 
         fun adding(adapter: MainAdapter){
             adapter.addItem()
@@ -30,20 +31,16 @@ class FragmentTwo : Fragment() {
     ): View? {
 
         var notesList = ArrayList<NoteItem>()
-        notesList.add(NoteItem("Título4", "Subtitulo"))
-        notesList.add(NoteItem("Título3", "Subtitulo"))
-        notesList.add(NoteItem("Título2", "Subtitulo"))
-        notesList.add(NoteItem("Título1", "Subtitulo"))
 
         val rootView = inflater.inflate(R.layout.fragment_fragment_one, container, false)
 
-        val recyclerView = rootView.findViewById(R.id.recyclerView) as RecyclerView
+        FragmentTwo.recyclerView = rootView.findViewById(R.id.recyclerView) as RecyclerView
 
         var layoutManager = LinearLayoutManager(activity)
         adapter = MainAdapter(notesList)
 
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = layoutManager
+        recyclerView!!.adapter = adapter
+        recyclerView!!.layoutManager = layoutManager
 
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
 

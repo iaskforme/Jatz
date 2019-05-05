@@ -39,29 +39,30 @@ class MainActivity : AppCompatActivity() {
 
         floatButton.setOnClickListener {
 
-            val dialog = CreateNoteFragment()
-            dialog.show(supportFragmentManager, dialog.tag)
-
-
             //IMPORTANTE PARA SABER QUE FRAGMENTO ESTA EN LA PANTALLA
+            val createNoteDialog = CreateNoteFragment()
+
+
             var page = supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.main_view_pager+ ":" + main_view_pager.getCurrentItem())
+            var bundle = Bundle()
+            createNoteDialog.arguments = bundle
 
-            Log.v("TAG", "${page}")
+            when{
+                page is FragmentOne ->{
+                    bundle.putInt("fragment",0)
+                }
 
-            if (page is FragmentOne) {
-                FragmentOne.adding(FragmentOne.adapter!!)
-                Log.v("TAG", "To do page")
-            }else{
-                if(page is FragmentTwo) {
-                    FragmentTwo.adding(FragmentTwo.adapter!!)
-                    Log.v("TAG", "In progress page")
-                }else{
-                    if(page is FragmentThree) {
-                        FragmentThree.adding(FragmentThree.adapter!!)
-                        Log.v("TAG", "Done page")
-                    }
+                page is FragmentTwo ->{
+                    bundle.putInt("fragment",1)
+                }
+
+                page is FragmentThree -> {
+                    bundle.putInt("fragment",2)
                 }
             }
+
+            createNoteDialog.show(supportFragmentManager, createNoteDialog.tag)
+
         }
     }
 

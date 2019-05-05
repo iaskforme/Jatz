@@ -23,10 +23,8 @@ class LoginActivity : AppCompatActivity() {
          * Listener for login button that executes loginUser function
          */
         login_button.setOnClickListener{
-
             loginUser()
-
-            }
+        }
 
         /**
          * Listener for singup text that starts SignUpActivity

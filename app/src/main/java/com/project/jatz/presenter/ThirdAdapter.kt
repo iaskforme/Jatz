@@ -14,6 +14,7 @@ class ThirdAdapter(var itemList: ArrayList<BoardItem>): RecyclerView.Adapter<Cus
     private var removedItemPosition: Int = 0
     private var removedItem: BoardItem? = null
 
+
     override fun getItemCount(): Int {
         return itemList!!.size
     }
@@ -28,8 +29,7 @@ class ThirdAdapter(var itemList: ArrayList<BoardItem>): RecyclerView.Adapter<Cus
     override fun onBindViewHolder(holder: CustomViewHolderDrawer, position: Int) {
 
         var currentItem: BoardItem = itemList!!.get(position)
-
-        holder.text1.text = currentItem.textLineOne
+        holder.text1.text = currentItem.boardTitle
     }
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder){
@@ -42,10 +42,10 @@ class ThirdAdapter(var itemList: ArrayList<BoardItem>): RecyclerView.Adapter<Cus
 
     fun addItem(){
         itemList.add(BoardItem("Hola"))
-        notifyDataSetChanged()
     }
+
 }
 
 class CustomViewHolderDrawer(v: View): RecyclerView.ViewHolder(v){
-    var text1: TextView = v.findViewById(R.id.board_title)
+    var text1: TextView = v.findViewById(R.id.draweritem_textview)
 }

@@ -7,7 +7,7 @@
     <!--Main layout with all the content besides the one above-->
     <LinearLayout
             android:orientation="vertical"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -53,6 +53,7 @@
                     android:id="@+id/fragmentboard_save_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:layout_marginLeft="180dp"
                     android:textStyle="bold"
                     android:textColor="@color/colorAccent"
@@ -63,6 +64,7 @@
                     android:id="@+id/fragmentboard_cancel_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:layout_marginLeft="240dp"
                     android:textStyle="bold"
                     android:textColor="@color/colorAccent"
