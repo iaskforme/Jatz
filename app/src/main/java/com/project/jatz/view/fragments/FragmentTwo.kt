@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.project.jatz.presenter.MainAdapter
 import com.project.jatz.R
 import com.project.jatz.model.NoteItem
+import com.project.jatz.model.NoteList
 
 
 class FragmentTwo : Fragment() {
@@ -19,10 +20,6 @@ class FragmentTwo : Fragment() {
     companion object {
         var adapter: MainAdapter? = null
         var recyclerView: RecyclerView? = null
-
-        fun adding(adapter: MainAdapter){
-            adapter.addItem()
-        }
     }
 
     override fun onCreateView(
@@ -30,14 +27,14 @@ class FragmentTwo : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        var notesList = ArrayList<NoteItem>()
+        //var notesList = NoteList.progressList
 
         val rootView = inflater.inflate(R.layout.fragment_fragment_one, container, false)
 
         FragmentTwo.recyclerView = rootView.findViewById(R.id.recyclerView) as RecyclerView
 
         var layoutManager = LinearLayoutManager(activity)
-        adapter = MainAdapter(notesList)
+        //adapter = MainAdapter(notesList)
 
         recyclerView!!.adapter = adapter
         recyclerView!!.layoutManager = layoutManager

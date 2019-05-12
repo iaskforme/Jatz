@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.project.jatz.presenter.MainAdapter
 import com.project.jatz.R
+import com.project.jatz.model.BoardItem
+import com.project.jatz.model.NoteItem
 import com.project.jatz.model.NoteList
 
 class FragmentOne : Fragment() {
@@ -19,26 +21,24 @@ class FragmentOne : Fragment() {
     companion object {
         var adapter: MainAdapter? = null
         var recyclerView: RecyclerView? = null
-
-        fun adding(adapter: MainAdapter){
-            adapter.addItem()
-        }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+    var bundleComing = this.arguments
+    var boardItem = BoardItem("default", NoteList(ArrayList<NoteItem>(),ArrayList<NoteItem>(),ArrayList<NoteItem>()))
 
-    ): View? {
 
-        var notesList = NoteList.todoList
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_fragment_one, container, false)
-
         FragmentOne.recyclerView = rootView.findViewById(R.id.recyclerView) as RecyclerView
 
+        if (bundleComing != null) {
+            boardItem = bundleComing!!.getParcelable("boardItem")
+        }
+
+
         var layoutManager = LinearLayoutManager(activity)
-        adapter = MainAdapter(notesList)
+        adapter = MainAdapter(boardItem.noteList.todoList)
 
         recyclerView!!.adapter = adapter
         recyclerView!!.layoutManager = layoutManager

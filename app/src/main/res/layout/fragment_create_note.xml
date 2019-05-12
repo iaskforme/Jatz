@@ -37,14 +37,14 @@
                 android:id="@+id/fragmentnote_title_edittext"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:textSize="20dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="12dp"
                 android:textColor="@color/colorAccent"
                 android:hint="Note title"
                 android:textColorHint="@color/colorText"
-                android:textCursorDrawable="@null"
-                android:backgroundTint="@color/colorMainPrimary"/>
+                android:textCursorDrawable="@null"/>
 
         <!--EditText to write the description of the new note-->
         <EditText

@@ -1,8 +1,12 @@
 package com.project.jatz.view.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,18 +15,25 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.project.jatz.R
+import com.project.jatz.model.BoardItem
 import com.project.jatz.model.NoteItem
 import com.project.jatz.model.NoteList
 
 /**
  * Class that inherits from DialogFragment and contains the parameters that allow the future creation of one. In this case for the creation of a note.
  */
-class CreateNoteFragment : DialogFragment() {
+class CreateNoteFragment() : DialogFragment(){
 
     var index: Int? = null
+    var todoList = ArrayList<NoteItem>()
+    var progressList = ArrayList<NoteItem>()
+    var doneList = ArrayList<NoteItem>()
+    var boardItem = BoardItem("default", NoteList(ArrayList<NoteItem>(),ArrayList<NoteItem>(),ArrayList<NoteItem>()))
+    var noteList = NoteList(todoList, progressList, doneList)
+    var bundleComing = this.arguments
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         super.onCreateView(inflater, container, savedInstanceState)
 
@@ -37,11 +48,15 @@ class CreateNoteFragment : DialogFragment() {
         val descriptionEditText: EditText = rootView.findViewById(R.id.fragmentnote_description_edittext)
         val commentEditText: EditText = rootView.findViewById(R.id.fragmentnote_comment_edittext)
 
-        saveText.setOnClickListener {rootView
+        if (bundleComing != null) {
+            boardItem = bundleComing!!.getParcelable("boardItem")
+        }
+
+        saveText.setOnClickListener {
             createNote(titleEditText, descriptionEditText, commentEditText, index)
         }
 
-        cancelText.setOnClickListener {rootView
+        cancelText.setOnClickListener {
             dismiss()
         }
 
@@ -67,29 +82,34 @@ class CreateNoteFragment : DialogFragment() {
         //Here should be the creation or addition to the list
         when(fragmentIndex){
             0 -> {
-                NoteList.todoList.add(NoteItem(title.text.toString(),description.text.toString(), comment.text.toString()))
+                todoList.add(NoteItem(title.text.toString(),description.text.toString(), comment.text.toString()))
+                //var bundle = Bundle()
+                //bundle.putParcelableArrayList("todo",noteList.noteTodoList)
                 FragmentOne.recyclerView!!.adapter!!.notifyDataSetChanged()
                 dismiss()
             }
 
             1 -> {
-                NoteList.progressList.add(NoteItem(title.text.toString(),description.text.toString(), comment.text.toString()))
+                progressList.add(NoteItem(title.text.toString(),description.text.toString(), comment.text.toString()))
                 FragmentTwo.recyclerView!!.adapter!!.notifyDataSetChanged()
                 dismiss()
             }
 
             2 -> {
-                NoteList.doneList.add(NoteItem(title.text.toString(),description.text.toString(), comment.text.toString()))
+                doneList.add(NoteItem(title.text.toString(),description.text.toString(), comment.text.toString()))
                 FragmentThree.recyclerView!!.adapter!!.notifyDataSetChanged()
                 dismiss()
             }
         }
+
+        boardItem.noteList = noteList
 
     }
 
     /**
      * just a toast
      */
+
     fun onCreateNoteFailed() {
         Toast.makeText(context, "Creation failed", Toast.LENGTH_LONG).show()
     }
@@ -123,5 +143,5 @@ class CreateNoteFragment : DialogFragment() {
 
         return valid
     }
-
 }
+

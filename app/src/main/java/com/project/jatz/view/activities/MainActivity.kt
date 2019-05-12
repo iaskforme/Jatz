@@ -2,7 +2,6 @@ package com.project.jatz.view.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -10,15 +9,20 @@ import com.project.jatz.*
 import com.project.jatz.presenter.SecondAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
-import androidx.fragment.app.FragmentTransaction
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import android.widget.Toast
 import com.parse.ParseUser
 import com.project.jatz.view.fragments.*
-
 
 class MainActivity : AppCompatActivity() {
 
     val fragmentAdapter = SecondAdapter(supportFragmentManager)
+    val bottomNavDrawerFragment = BottomNavigationSheetFragment()
+
+    companion object{
+        var todoFragment = FragmentOne()
+        var progressFragment = FragmentTwo()
+        var doneFragment = FragmentThree()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         createTabs(fragmentAdapter)
 
         handleFab(main_add_button)
-
     }
 
     /**
@@ -40,29 +43,38 @@ class MainActivity : AppCompatActivity() {
         floatButton.setOnClickListener {
 
             //IMPORTANTE PARA SABER QUE FRAGMENTO ESTA EN LA PANTALLA
-            val createNoteDialog = CreateNoteFragment()
+            if(checkBoard()){
 
+                var createNoteDialog = CreateNoteFragment()
 
-            var page = supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.main_view_pager+ ":" + main_view_pager.getCurrentItem())
-            var bundle = Bundle()
-            createNoteDialog.arguments = bundle
+                var bundleNote = Bundle()
 
-            when{
-                page is FragmentOne ->{
-                    bundle.putInt("fragment",0)
+                //BundleBottom
+                var boardItem = bottomNavDrawerFragment.currentBoardItem
+                bundleNote.putParcelable("boardItem", boardItem)
+                createNoteDialog.arguments = bundleNote
+
+                //Bundle fragment int
+                var page = supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.main_view_pager+ ":" + main_view_pager.getCurrentItem())
+
+                when{
+                    page is FragmentOne ->{
+                        bundleNote.putInt("fragment",0)
+                    }
+
+                    page is FragmentTwo ->{
+                        bundleNote.putInt("fragment",1)
+                    }
+
+                    page is FragmentThree -> {
+                        bundleNote.putInt("fragment",2)
+                    }
                 }
 
-                page is FragmentTwo ->{
-                    bundle.putInt("fragment",1)
-                }
-
-                page is FragmentThree -> {
-                    bundle.putInt("fragment",2)
-                }
+                createNoteDialog.show(supportFragmentManager, createNoteDialog.tag)
+            }else {
+                Toast.makeText(this,"No Board selected", Toast.LENGTH_SHORT).show()
             }
-
-            createNoteDialog.show(supportFragmentManager, createNoteDialog.tag)
-
         }
     }
 
@@ -70,13 +82,16 @@ class MainActivity : AppCompatActivity() {
      *
      */
     private fun createTabs(adapter: SecondAdapter){
-
-        adapter.addFragment(FragmentOne(), "To Do")
-        adapter.addFragment(FragmentTwo(), "In Progress")
-        adapter.addFragment(FragmentThree(), "Done")
+        adapter.addFragment(todoFragment, "To Do")
+        adapter.addFragment(progressFragment, "In Progress")
+        adapter.addFragment(doneFragment, "Done")
 
         main_view_pager.adapter = adapter
         main_tab_layout.setupWithViewPager(main_view_pager)
+    }
+
+    private fun checkBoard(): Boolean{
+       return bottomNavDrawerFragment.boardIsClicked
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -99,15 +114,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             android.R.id.home -> {
-                val bottomNavDrawerFragment = BottomNavigationSheetFragment()
                 bottomNavDrawerFragment.show(supportFragmentManager, bottomNavDrawerFragment.tag)
             }
         }
 
         return true
     }
-
-
-
 
 }

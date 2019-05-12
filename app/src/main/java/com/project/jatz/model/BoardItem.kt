@@ -1,10 +1,32 @@
 package com.project.jatz.model
 
-class BoardItem(title: String){
+import android.os.Parcel
+import android.os.Parcelable
 
-    var boardTitle: String = ""
+data class BoardItem(var title: String, var noteList: NoteList): Parcelable{
 
-    init {
-        boardTitle = title
+
+    private constructor(parcel: Parcel) : this(
+        title = parcel.readString(),
+        noteList = parcel.readParcelable<NoteList>(NoteList::class.java.classLoader)
+    )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(title)
     }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<BoardItem> {
+        override fun createFromParcel(parcel: Parcel): BoardItem {
+            return BoardItem(parcel)
+        }
+
+        override fun newArray(size: Int): Array<BoardItem?> {
+            return arrayOfNulls(size)
+        }
+    }
+
 }

@@ -1,6 +1,9 @@
 package com.project.jatz.view.activities
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -24,17 +27,21 @@ class SignUpActivity: AppCompatActivity() {
          */
         signup_button.setOnClickListener{
 
-            val user = ParseUser()
-            user.username = signup_nick_edittext.text.toString()
-            user.email = signup_email_edittext.text.toString()
-            user.setPassword(signup_password_edittext.text.toString())
-            user.put("name", signup_name_edittext.text.toString())
-            user.put("surname", signup_surname_edittext.text.toString())
+            if (isNetworkAvailable()){
 
+                val user = ParseUser()
+                user.username = signup_nick_edittext.text.toString()
+                user.email = signup_email_edittext.text.toString()
+                user.setPassword(signup_password_edittext.text.toString())
+                user.put("name", signup_name_edittext.text.toString())
+                user.put("surname", signup_surname_edittext.text.toString())
 
-            Log.e("HOLA",signup_name_edittext.toString())
+                signingUp(user)
 
-            signingUp(user)
+            }else{
+                Toast.makeText(this,"No connection available!", Toast.LENGTH_LONG).show()
+            }
+
 
         }
 
@@ -151,6 +158,14 @@ class SignUpActivity: AppCompatActivity() {
         }
 
         return valid
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE)
+        return if (connectivityManager is ConnectivityManager) {
+            val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
+            networkInfo?.isConnected ?: false
+        } else false
     }
 
 }

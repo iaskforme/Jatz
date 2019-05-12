@@ -1,6 +1,9 @@
 package com.project.jatz.view.activities
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +26,11 @@ class LoginActivity : AppCompatActivity() {
          * Listener for login button that executes loginUser function
          */
         login_button.setOnClickListener{
-            loginUser()
+            if (isNetworkAvailable()){
+                loginUser()
+            }else{
+                Toast.makeText(this,"No connection available!", Toast.LENGTH_LONG).show()
+            }
         }
 
         /**
@@ -115,5 +122,13 @@ class LoginActivity : AppCompatActivity() {
         }
 
         return valid
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE)
+        return if (connectivityManager is ConnectivityManager) {
+            val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
+            networkInfo?.isConnected ?: false
+        } else false
     }
 }

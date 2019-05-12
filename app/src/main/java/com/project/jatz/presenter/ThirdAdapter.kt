@@ -3,20 +3,17 @@ package com.project.jatz.presenter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.project.jatz.R
 import com.project.jatz.model.BoardItem
 
 // Binding betwen items and recyclerView
-class ThirdAdapter(var itemList: ArrayList<BoardItem>): RecyclerView.Adapter<CustomViewHolderDrawer>(){
-
-    private var removedItemPosition: Int = 0
-    private var removedItem: BoardItem? = null
-
+class ThirdAdapter(var itemList: ArrayList<BoardItem>, val clickListener: (BoardItem) -> Unit): RecyclerView.Adapter<CustomViewHolderDrawer>(){
 
     override fun getItemCount(): Int {
-        return itemList!!.size
+        return itemList.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolderDrawer {
@@ -27,25 +24,24 @@ class ThirdAdapter(var itemList: ArrayList<BoardItem>): RecyclerView.Adapter<Cus
     }
 
     override fun onBindViewHolder(holder: CustomViewHolderDrawer, position: Int) {
+        var currentItem: BoardItem = itemList.get(position)
+        holder.itemText.text = currentItem.title
 
-        var currentItem: BoardItem = itemList!!.get(position)
-        holder.text1.text = currentItem.boardTitle
-    }
-
-    fun removeItem(viewHolder: RecyclerView.ViewHolder){
-        removedItemPosition = viewHolder.adapterPosition
-        removedItem = itemList[viewHolder.adapterPosition]
-
-        itemList.removeAt(viewHolder.adapterPosition)
-        notifyItemRemoved(viewHolder.adapterPosition)
-    }
-
-    fun addItem(){
-        itemList.add(BoardItem("Hola"))
+        holder.bind(itemList[position], clickListener)
     }
 
 }
 
-class CustomViewHolderDrawer(v: View): RecyclerView.ViewHolder(v){
-    var text1: TextView = v.findViewById(R.id.draweritem_textview)
+class CustomViewHolderDrawer(var v: View): RecyclerView.ViewHolder(v){
+    var itemLayout: RelativeLayout = v.findViewById(R.id.draweritem_layout)
+    var itemText: TextView = v.findViewById(R.id.draweritem_textview)
+
+    fun bind(boardItem: BoardItem, clickListener: (BoardItem) -> Unit) {
+        v.setOnClickListener { clickListener(boardItem) }
+    }
 }
+
+
+
+
+

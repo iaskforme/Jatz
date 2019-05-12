@@ -30,8 +30,8 @@ class MainAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<Custo
 
         var currentItem: NoteItem = itemList!!.get(position)
 
-        holder.text1.text = currentItem.noteTitle
-        holder.text2.text = currentItem.noteDescription
+        //holder.text1.text = currentItem.noteTitle
+        //holder.text2.text = currentItem.noteDescription
     }
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder){
@@ -41,16 +41,13 @@ class MainAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<Custo
         itemList.removeAt(viewHolder.adapterPosition)
         notifyItemRemoved(viewHolder.adapterPosition)
 
+        /*
         Snackbar.make(viewHolder.itemView,"${removedItem!!.noteTitle.toString()} removed", Snackbar.LENGTH_LONG).setAction("UNDO"){
             itemList.add(removedItemPosition, removedItem!!)
             notifyItemInserted(removedItemPosition)
-        }.show()
+        }.show()*/
     }
 
-    fun addItem(){
-        itemList.add(NoteItem("Hola", "Holita","holiton"))
-        notifyDataSetChanged()
-    }
 }
 
 //Create it cause the adapter needs it

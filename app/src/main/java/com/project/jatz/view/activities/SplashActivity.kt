@@ -1,6 +1,9 @@
 package com.project.jatz.view.activities
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.AnimationUtils
@@ -24,24 +27,41 @@ class SplashActivity : AppCompatActivity() {
 
         var waitThread = Thread(){
             try {
-                sleep(3000)
+                sleep(2000)
             }catch (e: InterruptedException){
                 e.printStackTrace()
             }finally {
 
-                if (currentUser != null) {
-                    val mainActivityLaunch = Intent(this, MainActivity::class.java)
-                    startActivity(mainActivityLaunch)
-                    finish()
+                if (currentUser != null && isNetworkAvailable()) {
+                    launchMain()
 
                 } else {
-                    val loginActivityLaunch = Intent(this, LoginActivity::class.java)
-                    startActivity(loginActivityLaunch)
-                    finish()
+                    launchLogin()
                 }
             }
         }
 
         waitThread.start()
     }
+
+    fun launchMain(){
+        val mainActivityLaunch = Intent(this, MainActivity::class.java)
+        startActivity(mainActivityLaunch)
+        finish()
+    }
+
+    fun launchLogin(){
+        val loginActivityLaunch = Intent(this, LoginActivity::class.java)
+        startActivity(loginActivityLaunch)
+        finish()
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE)
+        return if (connectivityManager is ConnectivityManager) {
+            val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
+            networkInfo?.isConnected ?: false
+        } else false
+    }
+
 }
