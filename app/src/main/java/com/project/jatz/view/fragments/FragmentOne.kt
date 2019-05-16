@@ -24,7 +24,7 @@ class FragmentOne : Fragment() {
     }
 
     var bundleComing = this.arguments
-    var boardItem = BoardItem("default", NoteList(ArrayList<NoteItem>(),ArrayList<NoteItem>(),ArrayList<NoteItem>()))
+    //var boardItem = BoardItem("default", NoteList(ArrayList<NoteItem>(),ArrayList<NoteItem>(),ArrayList<NoteItem>()))
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -33,12 +33,12 @@ class FragmentOne : Fragment() {
         FragmentOne.recyclerView = rootView.findViewById(R.id.recyclerView) as RecyclerView
 
         if (bundleComing != null) {
-            boardItem = bundleComing!!.getParcelable("boardItem")
+            //boardItem = bundleComing!!.getParcelable("boardItem")
         }
 
 
         var layoutManager = LinearLayoutManager(activity)
-        adapter = MainAdapter(boardItem.noteList.todoList)
+        //adapter = MainAdapter(boardItem.noteList.todoList)
 
         recyclerView!!.adapter = adapter
         recyclerView!!.layoutManager = layoutManager

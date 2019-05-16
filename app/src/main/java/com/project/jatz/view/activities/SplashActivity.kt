@@ -33,7 +33,7 @@ class SplashActivity : AppCompatActivity() {
             }finally {
 
                 if (currentUser != null && isNetworkAvailable()) {
-                    launchMain()
+                    launchBoards()
 
                 } else {
                     launchLogin()
@@ -44,9 +44,9 @@ class SplashActivity : AppCompatActivity() {
         waitThread.start()
     }
 
-    fun launchMain(){
-        val mainActivityLaunch = Intent(this, MainActivity::class.java)
-        startActivity(mainActivityLaunch)
+    fun launchBoards(){
+        val boardsActivityLaunch = Intent(this, BoardsActivity::class.java)
+        startActivity(boardsActivityLaunch)
         finish()
     }
 

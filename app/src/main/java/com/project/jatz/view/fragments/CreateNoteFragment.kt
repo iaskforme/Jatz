@@ -28,7 +28,7 @@ class CreateNoteFragment() : DialogFragment(){
     var todoList = ArrayList<NoteItem>()
     var progressList = ArrayList<NoteItem>()
     var doneList = ArrayList<NoteItem>()
-    var boardItem = BoardItem("default", NoteList(ArrayList<NoteItem>(),ArrayList<NoteItem>(),ArrayList<NoteItem>()))
+    //var boardItem = BoardItem("default", NoteList(ArrayList<NoteItem>(),ArrayList<NoteItem>(),ArrayList<NoteItem>()))
     var noteList = NoteList(todoList, progressList, doneList)
     var bundleComing = this.arguments
 
@@ -49,7 +49,7 @@ class CreateNoteFragment() : DialogFragment(){
         val commentEditText: EditText = rootView.findViewById(R.id.fragmentnote_comment_edittext)
 
         if (bundleComing != null) {
-            boardItem = bundleComing!!.getParcelable("boardItem")
+            //boardItem = bundleComing!!.getParcelable("boardItem")
         }
 
         saveText.setOnClickListener {
@@ -62,6 +62,7 @@ class CreateNoteFragment() : DialogFragment(){
 
         return rootView
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +103,7 @@ class CreateNoteFragment() : DialogFragment(){
             }
         }
 
-        boardItem.noteList = noteList
+        //boardItem.noteList = noteList
 
     }
 

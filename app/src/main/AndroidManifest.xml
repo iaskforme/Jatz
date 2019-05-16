@@ -13,6 +13,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity
+                android:name=".view.activities.BoardsActivity"
+                android:theme="@style/AppBoardsTheme">
+        </activity>
         <activity android:name=".view.activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

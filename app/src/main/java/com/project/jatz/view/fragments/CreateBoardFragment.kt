@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_create_board.*
 class CreateBoardFragment: DialogFragment() {
 
     var boardList: BoardList = BoardList(ArrayList<BoardItem>())
-    var boardItem = BoardItem("default", NoteList(ArrayList<NoteItem>(),ArrayList<NoteItem>(),ArrayList<NoteItem>()))
+    //var boardItem = BoardItem("default", NoteList(ArrayList<NoteItem>(),ArrayList<NoteItem>(),ArrayList<NoteItem>()))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
@@ -63,8 +63,8 @@ class CreateBoardFragment: DialogFragment() {
             return
         }
 
-        boardItem.title = fragmentboard_boardname_edittext.text.toString()
-        boardList.list.add(boardItem)
+        //boardItem.title = fragmentboard_boardname_edittext.text.toString()
+        //boardList.list.add(boardItem)
 
         BottomNavigationSheetFragment.recyclerView!!.adapter!!.notifyDataSetChanged()
         dismiss()

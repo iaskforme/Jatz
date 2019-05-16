@@ -1,32 +1,33 @@
 package com.project.jatz.model
 
-import android.os.Parcel
-import android.os.Parcelable
+import com.parse.ParseClassName
+import com.parse.ParseObject
+import com.parse.ParseUser
 
-data class BoardItem(var title: String, var noteList: NoteList): Parcelable{
+@ParseClassName("BoardItem")
+class BoardItem: ParseObject() {
 
+    /**
+     * This method sets the board's title
+     * put() is an inbuilt method in the ParseObject class
+     */
+    fun setTitle(title: String) = put("title", title)
 
-    private constructor(parcel: Parcel) : this(
-        title = parcel.readString(),
-        noteList = parcel.readParcelable<NoteList>(NoteList::class.java.classLoader)
-    )
+    /**
+     * This method sets the board's user
+     * put() is an inbuilt method in the ParseObject class
+     */
+    fun setUser(user: ParseUser) = put("createdBy",user)
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(title)
-    }
+    /**
+     * This method returns the note's title
+     * getString() is an inbuilt method in the ParseObject class
+     */
+    fun getTitle() = getString("title")
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<BoardItem> {
-        override fun createFromParcel(parcel: Parcel): BoardItem {
-            return BoardItem(parcel)
-        }
-
-        override fun newArray(size: Int): Array<BoardItem?> {
-            return arrayOfNulls(size)
-        }
-    }
-
+    /**
+     * This method returns the note's details
+     * getString() is an inbuilt method in the ParseObject class
+     */
+    fun getUser() = getParseUser("createdBy")
 }

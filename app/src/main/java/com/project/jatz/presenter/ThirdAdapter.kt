@@ -25,7 +25,7 @@ class ThirdAdapter(var itemList: ArrayList<BoardItem>, val clickListener: (Board
 
     override fun onBindViewHolder(holder: CustomViewHolderDrawer, position: Int) {
         var currentItem: BoardItem = itemList.get(position)
-        holder.itemText.text = currentItem.title
+        //holder.itemText.text = currentItem.title
 
         holder.bind(itemList[position], clickListener)
     }

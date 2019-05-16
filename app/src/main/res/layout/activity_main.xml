@@ -35,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/colorAccent"
                 android:layout_gravity="bottom"
-                app:navigationIcon="@drawable/ic_dehaze_white_24dp"
                 app:hideOnScroll="true"
                 app:layout_scrollFlags="scroll|enterAlways"
                 style="@style/Widget.MaterialComponents.BottomAppBar">

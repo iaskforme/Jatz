@@ -62,13 +62,13 @@ class LoginActivity : AppCompatActivity() {
 
         userEmailQuery.findInBackground(FindCallback { users, e ->
 
-            if (e == null && users.size != 0){
+            if (e == null && users.size > 0){
                 ParseUser.logInInBackground(users.get(0).username, login_password_edittext.text.toString(), LogInCallback { user, a ->
 
                     if(user != null){
                         Toast.makeText(this, "Welcome ${user.get("name")}!", Toast.LENGTH_SHORT).show()
 
-                        val intent = Intent(this, MainActivity::class.java)
+                        val intent = Intent(this, BoardsActivity::class.java)
                         startActivity(intent)
                         finish()
 

@@ -1,11 +1,19 @@
 package com.project.jatz.utils
 
+
+import android.app.Activity
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import androidx.core.content.ContextCompat.getSystemService
+import android.widget.Toast
 
 class Util (){
 
+    companion object{
+
+        fun showToast(context: Context, message: String){
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+
+
+    }
 
 }

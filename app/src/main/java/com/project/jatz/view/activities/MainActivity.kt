@@ -16,7 +16,7 @@ import com.project.jatz.view.fragments.*
 class MainActivity : AppCompatActivity() {
 
     val fragmentAdapter = SecondAdapter(supportFragmentManager)
-    val bottomNavDrawerFragment = BottomNavigationSheetFragment()
+    //val bottomNavDrawerFragment = BottomNavigationSheetFragment()
 
     companion object{
         var todoFragment = FragmentOne()
@@ -32,12 +32,13 @@ class MainActivity : AppCompatActivity() {
 
         createTabs(fragmentAdapter)
 
-        handleFab(main_add_button)
+        //handleFab(main_add_button)
     }
 
     /**
      *
      */
+    /*
     private fun handleFab(floatButton: FloatingActionButton) {
 
         floatButton.setOnClickListener {
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this,"No Board selected", Toast.LENGTH_SHORT).show()
             }
         }
-    }
+    }*/
 
     /**
      *
@@ -90,12 +91,13 @@ class MainActivity : AppCompatActivity() {
         main_tab_layout.setupWithViewPager(main_view_pager)
     }
 
+    /*
     private fun checkBoard(): Boolean{
        return bottomNavDrawerFragment.boardIsClicked
-    }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.bottom_app_bar, menu)
+        menuInflater.inflate(R.menu.notes_bottom_app_bar, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -114,7 +116,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             android.R.id.home -> {
-                bottomNavDrawerFragment.show(supportFragmentManager, bottomNavDrawerFragment.tag)
+                //bottomNavDrawerFragment.show(supportFragmentManager, bottomNavDrawerFragment.tag)
             }
         }
 
