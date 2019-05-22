@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class SecondAdapter(manager: FragmentManager): FragmentPagerAdapter(manager){
+class TabsAdapter(manager: FragmentManager): FragmentPagerAdapter(manager){
 
     val fragmentList: ArrayList<Fragment> = ArrayList()
     val titleList: ArrayList<String> = ArrayList()

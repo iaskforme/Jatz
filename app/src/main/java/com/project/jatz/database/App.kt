@@ -6,6 +6,7 @@ import com.parse.ParseInstallation
 import com.parse.ParseObject
 import com.project.jatz.R
 import com.project.jatz.model.BoardItem
+import com.project.jatz.model.NoteItem
 
 /**
  * Class that contains Parse initialization
@@ -15,6 +16,7 @@ class App: Application(){
     override fun onCreate() {
         super.onCreate()
         ParseObject.registerSubclass(BoardItem::class.java)
+        ParseObject.registerSubclass(NoteItem::class.java)
         Parse.initialize(
             Parse.Configuration.Builder(this)
                 .applicationId(getString(R.string.parse_app_id))

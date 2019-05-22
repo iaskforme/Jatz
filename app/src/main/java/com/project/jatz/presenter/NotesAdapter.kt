@@ -9,14 +9,13 @@ import com.google.android.material.snackbar.Snackbar
 import com.project.jatz.R
 import com.project.jatz.model.NoteItem
 
-// Binding betwen items and recyclerView
-class MainAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<CustomViewHolder>(){
+class NotesAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<CustomViewHolder>(){
 
     private var removedItemPosition: Int = 0
     private var removedItem: NoteItem? = null
 
     override fun getItemCount(): Int {
-        return itemList!!.size
+        return itemList.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
@@ -28,10 +27,10 @@ class MainAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<Custo
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
 
-        var currentItem: NoteItem = itemList!!.get(position)
+        var currentItem: NoteItem = itemList.get(position)
 
-        //holder.text1.text = currentItem.noteTitle
-        //holder.text2.text = currentItem.noteDescription
+        holder.title.text = currentItem.getTitle()
+        holder.description.text = currentItem.getDescription()
     }
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder){
@@ -41,18 +40,18 @@ class MainAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<Custo
         itemList.removeAt(viewHolder.adapterPosition)
         notifyItemRemoved(viewHolder.adapterPosition)
 
-        /*
-        Snackbar.make(viewHolder.itemView,"${removedItem!!.noteTitle.toString()} removed", Snackbar.LENGTH_LONG).setAction("UNDO"){
+
+        Snackbar.make(viewHolder.itemView,"${removedItem!!.getTitle().toString()} removed", Snackbar.LENGTH_LONG).setAction("UNDO"){
             itemList.add(removedItemPosition, removedItem!!)
             notifyItemInserted(removedItemPosition)
-        }.show()*/
+        }.show()
     }
 
 }
 
 //Create it cause the adapter needs it
 class  CustomViewHolder (v: View): RecyclerView.ViewHolder(v){
-    var text1: TextView = v.findViewById(R.id.lineOne)
-    var text2: TextView = v.findViewById(R.id.lineTwo)
+    var title: TextView = v.findViewById(R.id.noteitem_title_textview)
+    var description: TextView = v.findViewById(R.id.noteitem_description_textview)
 
 }

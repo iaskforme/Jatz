@@ -15,9 +15,11 @@
             android:theme="@style/AppTheme">
         <activity
                 android:name=".view.activities.BoardsActivity"
-                android:theme="@style/AppBoardsTheme">
+                android:theme="@style/AppBoardsTheme"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".view.activities.SplashActivity">
+        <activity android:name=".view.activities.SplashActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -25,16 +27,19 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".view.activities.MainActivity"
-                android:theme="@style/AppMainTheme">
+                android:name=".view.activities.NotesActivity"
+                android:theme="@style/AppMainTheme"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".view.activities.SignUpActivity"
-                android:theme="@style/AppTheme">
+                android:theme="@style/AppTheme"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".view.activities.LoginActivity"
-                android:theme="@style/AppTheme">
+                android:theme="@style/AppTheme"
+                android:screenOrientation="portrait">
         </activity>
 
         <meta-data

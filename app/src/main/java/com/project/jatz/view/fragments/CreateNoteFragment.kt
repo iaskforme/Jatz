@@ -1,23 +1,23 @@
 package com.project.jatz.view.fragments
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.parse.ParseQuery
+import com.parse.ParseUser
 import com.project.jatz.R
 import com.project.jatz.model.BoardItem
 import com.project.jatz.model.NoteItem
-import com.project.jatz.model.NoteList
+import com.project.jatz.presenter.NotesAdapter
+import com.project.jatz.utils.Util
 
 /**
  * Class that inherits from DialogFragment and contains the parameters that allow the future creation of one. In this case for the creation of a note.
@@ -25,13 +25,7 @@ import com.project.jatz.model.NoteList
 class CreateNoteFragment() : DialogFragment(){
 
     var index: Int? = null
-    var todoList = ArrayList<NoteItem>()
-    var progressList = ArrayList<NoteItem>()
-    var doneList = ArrayList<NoteItem>()
-    //var boardItem = BoardItem("default", NoteList(ArrayList<NoteItem>(),ArrayList<NoteItem>(),ArrayList<NoteItem>()))
-    var noteList = NoteList(todoList, progressList, doneList)
-    var bundleComing = this.arguments
-
+    var currentBoard: String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -48,8 +42,9 @@ class CreateNoteFragment() : DialogFragment(){
         val descriptionEditText: EditText = rootView.findViewById(R.id.fragmentnote_description_edittext)
         val commentEditText: EditText = rootView.findViewById(R.id.fragmentnote_comment_edittext)
 
-        if (bundleComing != null) {
-            //boardItem = bundleComing!!.getParcelable("boardItem")
+        if (this.arguments != null) {
+            currentBoard = this.arguments!!.getString("currentBoard")
+            index = arguments!!.getInt("pageState")
         }
 
         saveText.setOnClickListener {
@@ -66,8 +61,6 @@ class CreateNoteFragment() : DialogFragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        index = arguments!!.getInt("fragment")
     }
 
     /**
@@ -76,73 +69,167 @@ class CreateNoteFragment() : DialogFragment(){
     fun createNote(title: EditText, description:EditText, comment: EditText, fragmentIndex: Int?){
 
         if (!validate(title, description, comment)) {
-            onCreateNoteFailed()
             return
         }
 
         //Here should be the creation or addition to the list
+
         when(fragmentIndex){
             0 -> {
-                todoList.add(NoteItem(title.text.toString(),description.text.toString(), comment.text.toString()))
-                //var bundle = Bundle()
-                //bundle.putParcelableArrayList("todo",noteList.noteTodoList)
-                FragmentOne.recyclerView!!.adapter!!.notifyDataSetChanged()
+                uploadNote(title,description, comment, "todo")
+                updateToDoAdapter()
                 dismiss()
             }
 
             1 -> {
-                progressList.add(NoteItem(title.text.toString(),description.text.toString(), comment.text.toString()))
-                FragmentTwo.recyclerView!!.adapter!!.notifyDataSetChanged()
+                uploadNote(title, description, comment, "done")
+                updateDoneAdapter()
                 dismiss()
             }
 
             2 -> {
-                doneList.add(NoteItem(title.text.toString(),description.text.toString(), comment.text.toString()))
-                FragmentThree.recyclerView!!.adapter!!.notifyDataSetChanged()
+                uploadNote(title, description, comment, "inprogress")
+                updateInProgressAdapter()
                 dismiss()
             }
         }
 
-        //boardItem.noteList = noteList
-
     }
 
-    /**
-     * just a toast
-     */
+    private fun uploadNote(title: EditText, description:EditText, comment: EditText, state: String){
 
-    fun onCreateNoteFailed() {
-        Toast.makeText(context, "Creation failed", Toast.LENGTH_LONG).show()
+        var boardQuery = ParseQuery.getQuery(BoardItem::class.java)
+        boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+        boardQuery.whereEqualTo("title", currentBoard)
+
+        var boardItem = boardQuery.first
+
+        var note = NoteItem()
+        note.setTitle(title.text.toString())
+        note.setDescription(description.text.toString())
+        note.setComment(comment.text.toString())
+        note.setState(state)
+        note.setUser(ParseUser.getCurrentUser())
+        note.setBoard(boardItem)
+
+        note.save()
     }
 
     /**
      * validation for the fields
      */
-    fun validate(title: EditText, description:EditText, comment: EditText): Boolean {
+    private fun validate(title: EditText, description:EditText, comment: EditText): Boolean {
         var valid = true
 
         if(title.text.toString().isEmpty()){
             title.setError("Fill in the field")
             valid = false
         }else{
-            valid = true
+            title.setError(null)
         }
 
         if(description.text.toString().isEmpty()){
             description.setError("Fill in the field")
             valid = false
         }else{
-            valid = true
+            description.setError(null)
         }
 
         if(comment.text.toString().isEmpty()){
             comment.setError("Fill in the field")
             valid = false
         }else{
-            valid = true
+            comment.setError(null)
         }
 
         return valid
+    }
+
+    private fun updateToDoAdapter(){
+        val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
+        boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+        boardQuery.whereEqualTo("title", currentBoard)
+
+        boardQuery.getFirstInBackground{boardItem, e ->
+            if(boardItem != null){
+                val notesQuery = ParseQuery.getQuery(NoteItem::class.java)
+                notesQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+                notesQuery.whereEqualTo("parentBoard", boardItem)
+                notesQuery.whereEqualTo("state","todo")
+
+                notesQuery.findInBackground{notesList, a ->
+                    if(a == null){
+                        val layoutManager = LinearLayoutManager(activity)
+                        val adapter = NotesAdapter(ArrayList(notesList))
+
+                        FragmentToDo.recyclerView!!.adapter = adapter
+                        FragmentToDo.recyclerView!!.layoutManager = layoutManager
+                    }else{
+                        Util.showToast(activity, a.message.toString())
+                        a.printStackTrace()
+                    }
+
+                }
+            }
+        }
+    }
+
+    private fun updateInProgressAdapter(){
+        val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
+        boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+        boardQuery.whereEqualTo("title", currentBoard)
+
+        boardQuery.getFirstInBackground{boardItem, e ->
+            if(boardItem != null){
+                val notesQuery = ParseQuery.getQuery(NoteItem::class.java)
+                notesQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+                notesQuery.whereEqualTo("parentBoard", boardItem)
+                notesQuery.whereEqualTo("state","inprogress")
+
+                notesQuery.findInBackground{notesList, a ->
+                    if(a == null){
+                        val layoutManager = LinearLayoutManager(activity)
+                        val adapter = NotesAdapter(ArrayList(notesList))
+
+                        FragmentInProgress.recyclerView!!.adapter = adapter
+                        FragmentInProgress.recyclerView!!.layoutManager = layoutManager
+                    }else{
+                        Util.showToast(activity, a.message.toString())
+                        a.printStackTrace()
+                    }
+
+                }
+            }
+        }
+    }
+
+    private fun updateDoneAdapter(){
+        val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
+        boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+        boardQuery.whereEqualTo("title", currentBoard)
+
+        boardQuery.getFirstInBackground{boardItem, e ->
+            if(boardItem != null){
+                val notesQuery = ParseQuery.getQuery(NoteItem::class.java)
+                notesQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+                notesQuery.whereEqualTo("parentBoard", boardItem)
+                notesQuery.whereEqualTo("state","done")
+
+                notesQuery.findInBackground{notesList, a ->
+                    if(a == null){
+                        val layoutManager = LinearLayoutManager(activity)
+                        val adapter = NotesAdapter(ArrayList(notesList))
+
+                        FragmentDone.recyclerView!!.adapter = adapter
+                        FragmentDone.recyclerView!!.layoutManager = layoutManager
+                    }else{
+                        Util.showToast(activity, a.message.toString())
+                        a.printStackTrace()
+                    }
+
+                }
+            }
+        }
     }
 }
 

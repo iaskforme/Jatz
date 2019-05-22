@@ -40,6 +40,9 @@
                 android:singleLine="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="20dp"
+                android:textSize="20dp"
+                android:hint="Board title"
+                android:textColorHint="@color/colorText"
                 android:layout_height="wrap_content"/>
 
         <!--RelativeLayout with two textviews containing the options of saving and canceling-->
@@ -54,6 +57,7 @@
                     android:id="@+id/fragmentboard_save_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:layout_marginLeft="180dp"
                     android:textStyle="bold"
@@ -65,6 +69,7 @@
                     android:id="@+id/fragmentboard_cancel_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:layout_marginLeft="240dp"
                     android:textStyle="bold"
