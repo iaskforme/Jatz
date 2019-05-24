@@ -8,24 +8,59 @@ import com.project.jatz.*
 import com.project.jatz.presenter.TabsAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.util.Log
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.parse.ParseUser
+import com.project.jatz.database.App
+import com.project.jatz.model.NoteItem
+import com.project.jatz.utils.ConnectionReceiver
+import com.project.jatz.utils.Util
 import com.project.jatz.view.fragments.*
 
-class NotesActivity : AppCompatActivity() {
+class NotesActivity : AppCompatActivity(), ConnectionReceiver.ConnectionReceiverListener {
 
     val fragmentAdapter = TabsAdapter(supportFragmentManager)
-    var currentBoard: String = ""
+    var connectionReceiver = ConnectionReceiver()
+
 
     companion object{
         var todoFragment = FragmentToDo()
-        var progressFragment = FragmentDone()
-        var doneFragment = FragmentInProgress()
+        var progressFragment = FragmentInProgress()
+        var doneFragment = FragmentDone()
+
+        var msupportFragmentManager: FragmentManager? = null
+
+        var currentBoard: String = ""
+
+        var bundleEditNote = Bundle()
+        var bundleCreateNote = Bundle()
+
+        var mainPager: Int? = null
+
+        fun clickedNote(noteItem: NoteItem){
+            val editNoteDialog = EditNoteFragment()
+
+            bundleEditNote.putString("currentBoard", currentBoard)
+            bundleEditNote.putString("currentNote", "${noteItem.getTitle()}")
+            bundleEditNote.putInt("currentPager", mainPager!!)
+
+            editNoteDialog.arguments = bundleEditNote
+            editNoteDialog.show(msupportFragmentManager, editNoteDialog.tag)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        baseContext.registerReceiver(connectionReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        App.instance.setConnectionListener(this)
+        NotesActivity.msupportFragmentManager = supportFragmentManager
 
         setSupportActionBar(main_bottom_appbar)
 
@@ -34,6 +69,17 @@ class NotesActivity : AppCompatActivity() {
         createTabs(fragmentAdapter)
 
         handleFab(main_add_button)
+
+        mainPager = main_view_pager.currentItem
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Unregisters reciver when another activity its prompted
+        unregisterReceiver(connectionReceiver)
+
+        baseContext.registerReceiver(connectionReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        App.instance.setConnectionListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -50,7 +96,7 @@ class NotesActivity : AppCompatActivity() {
             }
             R.id.bottom_app_logout -> {
                 ParseUser.logOut()
-                var loginIntent = Intent(this, LoginActivity::class.java)
+                val loginIntent = Intent(this, LoginActivity::class.java)
                 startActivity(loginIntent)
                 finish()
             }
@@ -60,35 +106,29 @@ class NotesActivity : AppCompatActivity() {
     }
 
     /**
-     *
+     * Checking and handling network connectivity through a BroadcastReceiver
      */
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        if(!isConnected) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            Util.showToast(this, "No connection available!")
+            finish()
+        }
+    }
 
+    /**
+     * Handles the floating button click
+     */
     private fun handleFab(floatButton: FloatingActionButton) {
 
         floatButton.setOnClickListener {
 
-            var createNoteDialog = CreateNoteFragment()
+            val createNoteDialog = CreateNoteFragment()
 
-            var bundle = Bundle()
-            bundle.putString("currentBoard", currentBoard)
+            bundleCreateNote.putString("currentBoard", currentBoard)
 
-            createNoteDialog.arguments = bundle
-
-            //Bundle fragment int
-            var page = supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.main_view_pager+ ":" + main_view_pager.getCurrentItem())
-            when{
-                page is FragmentToDo ->{
-                    bundle.putInt("pageState",0)
-                }
-
-                page is FragmentDone ->{
-                    bundle.putInt("pageState",1)
-                }
-
-                page is FragmentInProgress -> {
-                    bundle.putInt("pageState",2)
-                }
-            }
+            createNoteDialog.arguments = bundleCreateNote
 
             createNoteDialog.show(supportFragmentManager, createNoteDialog.tag)
         }
@@ -106,13 +146,39 @@ class NotesActivity : AppCompatActivity() {
 
         main_view_pager.adapter = adapter
         main_tab_layout.setupWithViewPager(main_view_pager)
+
+        main_view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+
+            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+
+            override fun onPageSelected(position: Int) {
+                when(position){
+                    0 ->{
+                        bundleEditNote.putInt("currentPage", 0)
+                        bundleCreateNote.putInt("currentPage",0)
+                    }
+
+                    1 ->{
+                        bundleEditNote.putInt("currentPage", 1)
+                        bundleCreateNote.putInt("currentPage",1)
+                    }
+
+                    2 -> {
+                        bundleEditNote.putInt("currentPage", 2)
+                        bundleCreateNote.putInt("currentPage",2)
+                    }
+                }
+            }
+
+        })
     }
 
     /**
      * Gets intent passed by BoardsActivity
      */
     private fun getCurrentBoardIntent(){
-        var intent = intent
+        val intent = intent
         currentBoard = intent.extras.getString("currentBoard")
     }
 
@@ -120,12 +186,11 @@ class NotesActivity : AppCompatActivity() {
      * Sends the current board to every fragment created
      */
     private fun sendBoard(){
-        var bundle = Bundle()
+        val bundle = Bundle()
         bundle.putString("currentBoard", currentBoard)
 
         todoFragment.arguments = bundle
         progressFragment.arguments = bundle
         doneFragment.arguments = bundle
-
     }
 }

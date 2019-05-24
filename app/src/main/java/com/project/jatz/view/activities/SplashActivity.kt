@@ -25,7 +25,7 @@ class SplashActivity : AppCompatActivity() {
 
         val currentUser = ParseUser.getCurrentUser()
 
-        var waitThread = Thread(){
+        val waitThread = Thread{
             try {
                 sleep(2000)
             }catch (e: InterruptedException){
@@ -44,13 +44,13 @@ class SplashActivity : AppCompatActivity() {
         waitThread.start()
     }
 
-    fun launchBoards(){
+    private fun launchBoards(){
         val boardsActivityLaunch = Intent(this, BoardsActivity::class.java)
         startActivity(boardsActivityLaunch)
         finish()
     }
 
-    fun launchLogin(){
+    private fun launchLogin(){
         val loginActivityLaunch = Intent(this, LoginActivity::class.java)
         startActivity(loginActivityLaunch)
         finish()

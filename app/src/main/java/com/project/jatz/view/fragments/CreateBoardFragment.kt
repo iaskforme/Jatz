@@ -1,5 +1,6 @@
 package com.project.jatz.view.fragments
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -9,15 +10,19 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.parse.ParseException
 import com.parse.ParseQuery
 import com.parse.ParseUser
 import com.project.jatz.R
 import com.project.jatz.model.BoardItem
+import com.project.jatz.model.NoteItem
 import com.project.jatz.presenter.BoardsAdapter
+import com.project.jatz.presenter.NotesAdapter
 import com.project.jatz.utils.Util
-import com.project.jatz.view.activities.BoardsActivity
+import com.project.jatz.view.activities.NotesActivity
 import kotlinx.android.synthetic.main.activity_boards.*
+
 
 /**
  * Class that inherits from DialogFragment and contains the parameters that allow the future creation of one.In this case for the creation of a board.
@@ -51,22 +56,50 @@ class CreateBoardFragment: DialogFragment() {
      */
     private fun createBoard(boardEditText: EditText){
 
-        var boardQuery = ParseQuery.getQuery(BoardItem::class.java)
-        boardQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK)
+        val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
+        boardQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
         boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
         boardQuery.whereEqualTo("title", boardEditText.text.toString())
 
-        boardQuery.findInBackground{list, e ->
-            if(list.size > 0){
+        try {
+            if(boardQuery.find().size > 0){
                 boardEditText.setError("There is a board with this name")
             }else{
-                if(boardEditText.text.toString().isEmpty()){
+                if (boardEditText.text.toString().isEmpty()){
                     boardEditText.setError("Missing board's name")
                 }else{
-                    uploadBoard(boardEditText)
-                    dismiss()
+                    val board = BoardItem()
+                    board.setTitle(boardEditText.text.toString())
+                    board.setUser(ParseUser.getCurrentUser())
+
+                    board.save()
+
+                    val boardsQuery = ParseQuery.getQuery(BoardItem::class.java)
+                    boardsQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
+                    boardsQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+
+                    try {
+                        val boardList = ArrayList(boardsQuery.find())
+
+                        if(activity!!.boards_empty_layout.visibility == View.VISIBLE){
+                            activity!!.boards_empty_layout.visibility = View.GONE
+                            activity!!.boards_recycler_view.visibility = View.VISIBLE
+                        }
+
+                        updateAdapter(boardList)
+
+                        dismiss()
+
+                    }catch (a: ParseException){
+                        a.printStackTrace()
+                    }
                 }
             }
+
+
+
+        }catch (e: ParseException){
+            e.printStackTrace()
         }
     }
 
@@ -76,23 +109,11 @@ class CreateBoardFragment: DialogFragment() {
      */
     private fun uploadBoard(boardEditText: EditText){
 
-        var board = BoardItem()
+        val board = BoardItem()
         board.setTitle(boardEditText.text.toString())
         board.setUser(ParseUser.getCurrentUser())
 
         board.save()
-
-        var boardQuery = ParseQuery.getQuery(BoardItem::class.java)
-        boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
-
-        try {
-            var boardList = ArrayList(boardQuery.find())
-            updateAdapter(boardList)
-
-        } catch (e: ParseException) {
-            Util.showToast(activity, e.message.toString())
-            e.printStackTrace()
-        }
     }
 
     /**
@@ -100,7 +121,12 @@ class CreateBoardFragment: DialogFragment() {
      * @param boardList: ArrayList containing Board Items
      */
     private fun updateAdapter(boardList: ArrayList<BoardItem>){
-        activity!!.boards_recycler_view.adapter = BoardsAdapter(boardList, { boardItem: BoardItem -> BoardsActivity.clickedBoard(boardItem) })
+        val layoutManager = LinearLayoutManager(activity)
+        val adapter = BoardsAdapter(boardList)
+
+        activity!!.boards_recycler_view.adapter = adapter
+        activity!!.boards_recycler_view.layoutManager = layoutManager
+
         activity!!.boards_recycler_view.adapter!!.notifyDataSetChanged()
     }
 }

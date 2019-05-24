@@ -1,5 +1,6 @@
 package com.project.jatz.presenter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,29 +9,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.project.jatz.R
 import com.project.jatz.model.NoteItem
+import com.project.jatz.view.activities.NotesActivity
 
-class NotesAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<CustomViewHolder>(){
+/**
+ *
+ */
+class NotesAdapter(val itemList: ArrayList<NoteItem>, val clickListener: (NoteItem) -> Unit = { noteItem : NoteItem-> NotesActivity.clickedNote(noteItem) }): RecyclerView.Adapter<NotesAdapter.NoteViewHolder>(){
 
     private var removedItemPosition: Int = 0
     private var removedItem: NoteItem? = null
 
-    override fun getItemCount(): Int {
-        return itemList.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.note_item, parent, false)
+
+        return NoteViewHolder(view)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        var cellRow = layoutInflater.inflate(R.layout.note_item, parent, false)
-
-        return CustomViewHolder(cellRow)
-    }
-
-    override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-
+    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         var currentItem: NoteItem = itemList.get(position)
 
         holder.title.text = currentItem.getTitle()
         holder.description.text = currentItem.getDescription()
+        holder.bind(itemList[position], clickListener)
+    }
+
+    override fun getItemCount(): Int {
+        return itemList.size
     }
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder){
@@ -47,11 +51,14 @@ class NotesAdapter(val itemList: ArrayList<NoteItem>): RecyclerView.Adapter<Cust
         }.show()
     }
 
-}
+    class  NoteViewHolder (var rowView: View): RecyclerView.ViewHolder(rowView){
+        var title: TextView = rowView.findViewById(R.id.noteitem_title_textview)
+        var description: TextView = rowView.findViewById(R.id.noteitem_description_textview)
 
-//Create it cause the adapter needs it
-class  CustomViewHolder (v: View): RecyclerView.ViewHolder(v){
-    var title: TextView = v.findViewById(R.id.noteitem_title_textview)
-    var description: TextView = v.findViewById(R.id.noteitem_description_textview)
+       fun bind (noteItem: NoteItem, listener: (NoteItem) -> Unit) = with(rowView) {
+           setOnClickListener { listener(noteItem) }
+       }
+
+    }
 
 }

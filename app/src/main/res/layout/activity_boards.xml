@@ -3,7 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".view.activities.BoardsActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -19,6 +20,28 @@
                 android:padding="5dp"
                 android:scrollbars="vertical">
         </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+                android:id="@+id/boards_empty_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+            <ImageView
+                    android:layout_width="500dp"
+                    android:layout_height="400dp"
+                    android:layout_gravity="top"
+                    android:src="@drawable/such_empty"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="20dp"
+                    android:text="Such empty . . ."/>
+        </LinearLayout>
+
 
         <com.google.android.material.bottomappbar.BottomAppBar
                 android:id="@+id/boards_top_appbar"

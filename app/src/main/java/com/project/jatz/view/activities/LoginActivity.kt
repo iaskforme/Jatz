@@ -2,6 +2,7 @@ package com.project.jatz.view.activities
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
@@ -9,18 +10,23 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.parse.*
 import com.project.jatz.R
+import com.project.jatz.database.App
+import com.project.jatz.utils.ConnectionReceiver
 import kotlinx.android.synthetic.main.activity_login.*
 
 /**
  * This class contains the activity used for loginin by users already created
  */
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), ConnectionReceiver.ConnectionReceiverListener  {
+
+    var connectionReceiver = ConnectionReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        ParseInstallation.getCurrentInstallation().saveInBackground()
+        baseContext.registerReceiver(connectionReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        App.instance.setConnectionListener(this)
 
         /**
          * Listener for login button that executes loginUser function
@@ -45,16 +51,37 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        // Unregisters reciver when another activity its prompted
+        unregisterReceiver(connectionReceiver)
+
+        baseContext.registerReceiver(connectionReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        App.instance.setConnectionListener(this)
+    }
+
+    /**
+     * Checking and handling network connectivity through a BroadcastReceiver
+     */
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        if(!isConnected){
+              login_button.isEnabled = false
+              login_button.text = "NO CONNECTION"
+        }else{
+            login_button.text = "LOGIN"
+            login_button.isEnabled = true
+        }
+    }
+
     /**
      *
      * Function that contains the connection with the database and logs in to access the main activity.
      * This connection its made getting the user's email and verifying in it with the one get it in database
      *
      */
-    fun loginUser(){
+    private fun loginUser(){
 
         if (!validate()) {
-            onLoginFailed()
             return
         }
 
@@ -88,20 +115,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
-     * Shows a toast in case the validation fails
-     */
-    fun onLoginFailed() {
-        Toast.makeText(baseContext, "Login failed", Toast.LENGTH_LONG).show()
-
-        login_button.setEnabled(true)
-    }
-
-    /**
      * Fields validation got from login and pressing "login" button
      *
      * @return Boolean if every field pass the validation or not
      */
-    fun validate(): Boolean {
+    private fun validate(): Boolean {
         var valid = true
 
         val email = login_email_edittext.text.toString()

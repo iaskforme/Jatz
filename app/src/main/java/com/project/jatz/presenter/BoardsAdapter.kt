@@ -1,14 +1,16 @@
 package com.project.jatz.presenter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.project.jatz.R
 import com.project.jatz.model.BoardItem
-import kotlinx.android.synthetic.main.board_item.view.*
+import com.project.jatz.view.activities.BoardsActivity
 
-class BoardsAdapter(private val boardList: List<BoardItem>, val clickListener: (BoardItem) -> Unit) : RecyclerView.Adapter<BoardsAdapter.BoardViewHolder>() {
+class BoardsAdapter(private val boardList: ArrayList<BoardItem>, val clickListener: (BoardItem) -> Unit = { boardItem : BoardItem ->BoardsActivity.clickedBoard(boardItem)}) : RecyclerView.Adapter<BoardsAdapter.BoardViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.board_item, parent, false)
@@ -17,11 +19,9 @@ class BoardsAdapter(private val boardList: List<BoardItem>, val clickListener: (
     }
 
     override fun onBindViewHolder(holder: BoardViewHolder, position: Int) {
-        val boardItem = boardList[position]
+        var currentItem: BoardItem = boardList.get(position)
 
-        //Binding the title
-        holder.rowView.boarditem_textview.text = boardItem.getTitle()
-        //Binding the clickListener
+        holder.title.text = currentItem.getTitle()
         holder.bind(boardList[position], clickListener)
     }
 
@@ -31,9 +31,10 @@ class BoardsAdapter(private val boardList: List<BoardItem>, val clickListener: (
 
 
     class BoardViewHolder(var rowView: View) : RecyclerView.ViewHolder(rowView){
+        val title: TextView = rowView.findViewById(R.id.boarditem_textview)
 
-        fun bind(boardItem: BoardItem, clickListener: (BoardItem) -> Unit) {
-            rowView.setOnClickListener { clickListener(boardItem) }
+        fun bind(boardItem: BoardItem, listener: (BoardItem) -> Unit) = with(rowView) {
+            setOnClickListener { listener(boardItem) }
         }
     }
 

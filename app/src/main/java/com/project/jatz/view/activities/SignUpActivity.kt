@@ -2,25 +2,32 @@ package com.project.jatz.view.activities
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.parse.*
 import com.project.jatz.R
+import com.project.jatz.database.App
+import com.project.jatz.utils.ConnectionReceiver
 import kotlinx.android.synthetic.main.activity_signup.*
 
 /**
  * This class contains the activity used for singup by new users or creating new accounts
  */
-class SignUpActivity: AppCompatActivity() {
+class SignUpActivity: AppCompatActivity(), ConnectionReceiver.ConnectionReceiverListener {
+
+    var connectionReceiver = ConnectionReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
+
+        baseContext.registerReceiver(connectionReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        App.instance.setConnectionListener(this)
 
         /**
          * Listener for the "Create Account" button
@@ -57,16 +64,37 @@ class SignUpActivity: AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        // Unregisters reciver when another activity its prompted
+        unregisterReceiver(connectionReceiver)
+
+        baseContext.registerReceiver(connectionReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        App.instance.setConnectionListener(this)
+    }
+
+    /**
+     * Checking and handling network connectivity through a BroadcastReceiver
+     */
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        if(!isConnected){
+            signup_button.isEnabled = false
+            signup_button.text = "NO CONNECTION"
+        }else{
+            signup_button.text = "CREATE ACCOUNT"
+            signup_button.isEnabled = true
+        }
+    }
+
     /**
      * Function that contains the connection with the database as a user with the singUpInBackground method once ParseUser its created
      *
      * @param ParseUser instance for singUpInBackground run
      *
      */
-    fun signingUp(user: ParseUser){
+    private fun signingUp(user: ParseUser){
 
         if (!validate()) {
-            faieldSigningUp()
             return
         }
 
@@ -92,12 +120,6 @@ class SignUpActivity: AppCompatActivity() {
 
      }
 
-    /**
-     * Returns a toast if the signup fails
-     */
-    fun faieldSigningUp(){
-        Toast.makeText(this, "Fail to signup!", Toast.LENGTH_SHORT)
-    }
 
     /**
      * Fields validation got from signingup and pressing the "Create Account" button
@@ -105,7 +127,7 @@ class SignUpActivity: AppCompatActivity() {
      * @return Boolean if every field pass the validation or not
      *
      */
-    fun validate(): Boolean{
+    private fun validate(): Boolean{
         var valid = true
 
         val name = signup_name_edittext.text.toString()

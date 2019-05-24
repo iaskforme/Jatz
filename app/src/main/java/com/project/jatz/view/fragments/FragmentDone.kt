@@ -2,6 +2,7 @@ package com.project.jatz.view.fragments
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.parse.ParseException
 import com.parse.ParseQuery
 import com.parse.ParseUser
@@ -18,6 +18,7 @@ import com.project.jatz.model.BoardItem
 import com.project.jatz.model.NoteItem
 import com.project.jatz.presenter.NotesAdapter
 import com.project.jatz.utils.Util
+import com.project.jatz.view.activities.NotesActivity
 
 
 class FragmentDone : Fragment() {
@@ -37,39 +38,7 @@ class FragmentDone : Fragment() {
             currentBoard = this.arguments!!.getString("currentBoard")
         }
 
-        //Query  getting the parentBoard
-        var boardQuery = ParseQuery.getQuery(BoardItem::class.java)
-        var boardIsInCache = boardQuery.hasCachedResult()
-        boardQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK)
-
-        if (!boardIsInCache){
-            boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
-            boardQuery.whereEqualTo("title", currentBoard)
-
-            var boardItem = boardQuery.first
-
-            //Query getting notes
-            var notesQuery = ParseQuery.getQuery(NoteItem::class.java)
-            notesQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
-
-            notesQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
-            notesQuery.whereEqualTo("parentBoard", boardItem)
-            notesQuery.whereEqualTo("state","done")
-
-            try {
-                var notesList = ArrayList(notesQuery.find())
-
-                var layoutManager = LinearLayoutManager(activity)
-                var adapter = NotesAdapter(notesList)
-
-                recyclerView!!.adapter = adapter
-                recyclerView!!.layoutManager = layoutManager
-
-            }catch (e: ParseException){
-                Util.showToast(activity, e.message.toString())
-                e.printStackTrace()
-            }
-        }
+        loadData()
 
         // ItemTouchHelper with onSwiped method to move trough tabs/states
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
@@ -91,5 +60,40 @@ class FragmentDone : Fragment() {
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
         return rootView
+    }
+
+    private fun loadData(){
+
+        val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
+        val boardIsInCache = boardQuery.hasCachedResult()
+        boardQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK)
+        boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+        boardQuery.whereEqualTo("title", currentBoard)
+
+        if (!boardIsInCache) {
+            val boardItem = boardQuery.first
+
+            //Query getting notes
+            val notesQuery = ParseQuery.getQuery(NoteItem::class.java)
+            notesQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
+
+            notesQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+            notesQuery.whereEqualTo("parentBoard", boardItem)
+            notesQuery.whereEqualTo("state", "done")
+
+            try {
+                val notesList = ArrayList(notesQuery.find())
+
+                val layoutManager = LinearLayoutManager(activity)
+                val adapter = NotesAdapter(notesList)
+
+                recyclerView!!.adapter = adapter
+                recyclerView!!.layoutManager = layoutManager
+
+            } catch (e: com.parse.ParseException) {
+                Util.showToast(activity, e.message.toString())
+                e.printStackTrace()
+            }
+        }
     }
 }

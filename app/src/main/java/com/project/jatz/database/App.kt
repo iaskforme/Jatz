@@ -7,11 +7,18 @@ import com.parse.ParseObject
 import com.project.jatz.R
 import com.project.jatz.model.BoardItem
 import com.project.jatz.model.NoteItem
+import com.project.jatz.utils.ConnectionReceiver
+
 
 /**
  * Class that contains Parse initialization
  */
 class App: Application(){
+
+    companion object{
+        @get:Synchronized
+        lateinit var instance: App
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -25,6 +32,12 @@ class App: Application(){
                 .build()
         )
 
+        instance = this
+
         ParseInstallation.getCurrentInstallation().saveInBackground()
+    }
+
+    fun setConnectionListener(listener: ConnectionReceiver.ConnectionReceiverListener){
+        ConnectionReceiver.connectionReceiverListener = listener
     }
 }

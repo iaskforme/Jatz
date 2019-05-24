@@ -16,6 +16,8 @@ import com.project.jatz.model.BoardItem
 import com.project.jatz.model.NoteItem
 import com.project.jatz.presenter.NotesAdapter
 import com.project.jatz.utils.Util
+import com.project.jatz.view.activities.NotesActivity
+import com.project.jatz.view.activities.NotesActivity.Companion.clickedNote
 
 class FragmentToDo : Fragment() {
 
@@ -36,39 +38,7 @@ class FragmentToDo : Fragment() {
             currentBoard = this.arguments!!.getString("currentBoard")
         }
 
-        //Query  getting the parentBoard
-        var boardQuery = ParseQuery.getQuery(BoardItem::class.java)
-        var boardIsInCache = boardQuery.hasCachedResult()
-
-        if (!boardIsInCache) {
-            boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
-            boardQuery.whereEqualTo("title", currentBoard)
-            boardQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK)
-
-            var boardList = ArrayList(boardQuery.find())
-
-            //Query getting notes
-            var notesQuery = ParseQuery.getQuery(NoteItem::class.java)
-            notesQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
-
-            notesQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
-            notesQuery.whereEqualTo("parentBoard", boardList[0])
-            notesQuery.whereEqualTo("state", "todo")
-
-            try {
-                var notesList = ArrayList(notesQuery.find())
-
-                var layoutManager = LinearLayoutManager(activity)
-                var adapter = NotesAdapter(notesList)
-
-                recyclerView!!.adapter = adapter
-                recyclerView!!.layoutManager = layoutManager
-
-            } catch (e: com.parse.ParseException) {
-                Util.showToast(activity, e.message.toString())
-                e.printStackTrace()
-            }
-        }
+        loadData()
 
         // ItemTouchHelper with onSwiped method to move trough tabs/states
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
@@ -86,10 +56,45 @@ class FragmentToDo : Fragment() {
             }
         }
 
-        var itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
         return rootView
+    }
+
+    private fun loadData(){
+
+        val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
+        val boardIsInCache = boardQuery.hasCachedResult()
+        boardQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK)
+        boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+        boardQuery.whereEqualTo("title", currentBoard)
+
+        if (!boardIsInCache) {
+            val boardItem = boardQuery.first
+
+            //Query getting notes
+            val notesQuery = ParseQuery.getQuery(NoteItem::class.java)
+            notesQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
+
+            notesQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+            notesQuery.whereEqualTo("parentBoard", boardItem)
+            notesQuery.whereEqualTo("state", "todo")
+
+            try {
+                val notesList = ArrayList(notesQuery.find())
+
+                val layoutManager = LinearLayoutManager(activity)
+                val adapter = NotesAdapter(notesList)
+
+                recyclerView!!.adapter = adapter
+                recyclerView!!.layoutManager = layoutManager
+
+            } catch (e: com.parse.ParseException) {
+                Util.showToast(activity, e.message.toString())
+                e.printStackTrace()
+            }
+        }
     }
 
 }

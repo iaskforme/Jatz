@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.parse.ParseException
 import com.parse.ParseQuery
 import com.parse.ParseUser
 import com.project.jatz.R
@@ -19,13 +21,13 @@ import com.project.jatz.model.NoteItem
 import com.project.jatz.presenter.NotesAdapter
 import com.project.jatz.utils.Util
 import com.project.jatz.view.activities.NotesActivity
-import kotlinx.android.synthetic.main.activity_main.*
 
 /**
- * Class that inherits from DialogFragment and contains the parameters that allow the future creation of one. In this case for the creation of a note.
+ * Class that inherits from DialogFragment and contains the parameters that allow the edition of the note clicked.
  */
-class CreateNoteFragment() : DialogFragment(){
+class EditNoteFragment: DialogFragment(){
 
+    var currentNote: String = ""
     var currentBoard: String = ""
     var currentPage: Int? = null
 
@@ -36,21 +38,25 @@ class CreateNoteFragment() : DialogFragment(){
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.ThemeOverlay_Material)
 
-        val rootView = inflater.inflate(R.layout.fragment_create_note, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_edit_note, container, false)
 
-        val saveText: TextView = rootView.findViewById(R.id.fragmentnote_save_textview)
-        val cancelText: TextView = rootView.findViewById(R.id.fragmentnote_cancel_textview)
-        val titleEditText: EditText = rootView.findViewById(R.id.fragmentnote_title_edittext)
-        val descriptionEditText: EditText = rootView.findViewById(R.id.fragmentnote_description_edittext)
-        val commentEditText: EditText = rootView.findViewById(R.id.fragmentnote_comment_edittext)
+        val saveText: TextView = rootView.findViewById(R.id.fragmenteditnote_save_textview)
+        val cancelText: TextView = rootView.findViewById(R.id.fragmenteditnote_cancel_textview)
+        val titleEditText: EditText = rootView.findViewById(R.id.fragmenteditnote_title_edittext)
+        val descriptionEditText: EditText = rootView.findViewById(R.id.fragmenteditnote_description_edittext)
+        val commentEditText: EditText = rootView.findViewById(R.id.fragmenteditnote_comment_edittext)
 
         if (this.arguments != null) {
+            currentNote = this.arguments!!.getString("currentNote")
             currentBoard = this.arguments!!.getString("currentBoard")
-            currentPage = arguments!!.getInt("currentPage")
+            currentPage = this.arguments!!.getInt("currentPage")
         }
+
+        loadNoteData(titleEditText, descriptionEditText, commentEditText)
 
         saveText.setOnClickListener {
             createNote(titleEditText, descriptionEditText, commentEditText, currentPage)
+
         }
 
         cancelText.setOnClickListener {
@@ -60,13 +66,22 @@ class CreateNoteFragment() : DialogFragment(){
         return rootView
     }
 
-    /**
-     * Create note: validation and calling fail if it fails in some way
-     * @param title: EditText
-     * @param description: EditText
-     * @param comment: EditText
-     */
-    private fun createNote(title: EditText, description: EditText, comment: EditText, currentPage: Int?){
+    private fun loadNoteData(title: EditText, description: EditText, comment: EditText){
+        val noteQuery = ParseQuery.getQuery(NoteItem::class.java)
+        noteQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+        noteQuery.whereEqualTo("title", currentNote)
+
+        noteQuery.getFirstInBackground{ noteItem, e ->
+            if(noteItem != null){
+                title.setText("${noteItem.getTitle()}")
+                description.setText("${noteItem.getDescription()}")
+                comment.setText("${noteItem.getComment()}")
+            }
+        }
+    }
+
+
+    private fun createNote(title: EditText, description: EditText, comment: EditText, currentPager: Int?){
 
         val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
         boardQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
@@ -100,19 +115,19 @@ class CreateNoteFragment() : DialogFragment(){
 
                                 when(currentPage){
                                     0 -> {
-                                        uploadNote(title,description, comment, "todo")
+                                        uploadNote(title,description, comment)
                                         updateToDoAdapter()
                                         dismiss()
                                     }
 
                                     1 -> {
-                                        uploadNote(title, description, comment, "inprogress")
+                                        uploadNote(title, description, comment)
                                         updateInProgressAdapter()
                                         dismiss()
                                     }
 
                                     2 -> {
-                                        uploadNote(title, description, comment, "done")
+                                        uploadNote(title, description, comment)
                                         updateDoneAdapter()
                                         dismiss()
                                     }
@@ -126,40 +141,30 @@ class CreateNoteFragment() : DialogFragment(){
         }
     }
 
+    private fun uploadNote(title: EditText, description: EditText, comment: EditText){
 
-    /**
-     * Uploading note to the data base
-     *
-     * @param title: EditText
-     * @param description: EditText
-     * @param comment: EditText
-     */
-    private fun uploadNote(title: EditText, description:EditText, comment: EditText, state: String){
+        val noteQuery = ParseQuery.getQuery(NoteItem::class.java)
+        noteQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+        noteQuery.whereEqualTo("title",currentNote)
 
-        val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
-        boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
-        boardQuery.whereEqualTo("title", currentBoard)
+        try {
+            val noteItem = noteQuery.first
+            noteItem.setTitle("${title.text}")
+            noteItem.setDescription("${description.text}")
+            noteItem.setComment("${comment.text}")
+            noteItem.save()
 
-        val boardItem = boardQuery.first
-
-        val note = NoteItem()
-        note.setTitle(title.text.toString())
-        note.setDescription(description.text.toString())
-        note.setComment(comment.text.toString())
-        note.setState(state)
-        note.setUser(ParseUser.getCurrentUser())
-        note.setBoard(boardItem)
-
-        note.save()
+        }catch (e: ParseException){
+            e.printStackTrace()
+        }
     }
 
-    /**
-     * Updating ToDo page adapter with the new items
-     */
+
     private fun updateToDoAdapter(){
         val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
         boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
         boardQuery.whereEqualTo("title", currentBoard)
+        boardQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
 
         boardQuery.getFirstInBackground{boardItem, e ->
             if(boardItem != null){
@@ -167,6 +172,7 @@ class CreateNoteFragment() : DialogFragment(){
                 notesQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
                 notesQuery.whereEqualTo("parentBoard", boardItem)
                 notesQuery.whereEqualTo("state","todo")
+                notesQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
 
                 notesQuery.findInBackground{notesList, a ->
                     if(a == null){
@@ -177,7 +183,6 @@ class CreateNoteFragment() : DialogFragment(){
                         FragmentToDo.recyclerView!!.layoutManager = layoutManager
 
                         FragmentToDo.recyclerView!!.adapter!!.notifyDataSetChanged()
-                        Log.e("tag","ACTUALIZANDO")
 
                     }else{
                         Util.showToast(activity, a.message.toString())
@@ -189,13 +194,11 @@ class CreateNoteFragment() : DialogFragment(){
         }
     }
 
-    /**
-     * Updating InProgress page adapter with the new items
-     */
     private fun updateInProgressAdapter(){
         val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
         boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
         boardQuery.whereEqualTo("title", currentBoard)
+        boardQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
 
         boardQuery.getFirstInBackground{boardItem, e ->
             if(boardItem != null){
@@ -203,6 +206,7 @@ class CreateNoteFragment() : DialogFragment(){
                 notesQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
                 notesQuery.whereEqualTo("parentBoard", boardItem)
                 notesQuery.whereEqualTo("state","inprogress")
+                notesQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
 
                 notesQuery.findInBackground{notesList, a ->
                     if(a == null){
@@ -213,7 +217,6 @@ class CreateNoteFragment() : DialogFragment(){
                         FragmentInProgress.recyclerView!!.layoutManager = layoutManager
 
                         FragmentInProgress.recyclerView!!.adapter!!.notifyDataSetChanged()
-
                     }else{
                         Util.showToast(activity, a.message.toString())
                         a.printStackTrace()
@@ -224,9 +227,6 @@ class CreateNoteFragment() : DialogFragment(){
         }
     }
 
-    /**
-     * Updating Done page adapter with the new items
-     */
     private fun updateDoneAdapter(){
         val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
         boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
@@ -249,7 +249,6 @@ class CreateNoteFragment() : DialogFragment(){
                         FragmentDone.recyclerView!!.layoutManager = layoutManager
 
                         FragmentDone.recyclerView!!.adapter!!.notifyDataSetChanged()
-
                     }else{
                         Util.showToast(activity, a.message.toString())
                         a.printStackTrace()

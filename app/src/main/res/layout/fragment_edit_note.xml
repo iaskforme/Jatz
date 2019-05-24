@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_round_both_dialog">
+
+    <!--Main layout with all the content besides the one above-->
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginRight="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <!--Title of the dialog of the edition of a note-->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit note"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                android:gravity="left"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+
+        <!--TextView with the description of what this dialog does-->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                android:textSize="16dp"
+                android:text="Rewrite the note's content"/>
+
+        <!--EditText to rewrite the name/title of the note-->
+        <EditText
+                android:id="@+id/fragmenteditnote_title_edittext"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/colorAccent"
+                android:hint="Note title"
+                android:textColorHint="@color/colorText"
+                android:textCursorDrawable="@null"/>
+
+        <!--EditText to rewrite the description of the note-->
+        <EditText
+                android:id="@+id/fragmenteditnote_description_edittext"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="16dp"
+                android:textColor="@android:color/black"
+                android:hint="Edit note description..."
+                android:textColorHint="@color/colorText"
+                android:textCursorDrawable="@null"
+                android:backgroundTint="@color/colorText"/>
+
+        <!--EditText to write other comments for the note-->
+        <EditText
+                android:id="@+id/fragmenteditnote_comment_edittext"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:textColor="@android:color/black"
+                android:layout_marginLeft="16dp"
+                android:hint="Add comment"
+                android:textColorHint="@color/colorText"
+                android:textCursorDrawable="@null"
+                android:backgroundTint="@color/colorText"/>
+
+        <!--RelativeLayout with two textviews containing the options of saving and canceling-->
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp">
+
+            <TextView
+                    android:id="@+id/fragmenteditnote_save_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_marginLeft="150dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp"
+                    android:text="SAVE"/>
+
+            <TextView
+                    android:id="@+id/fragmenteditnote_cancel_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_marginLeft="210dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp"
+                    android:text="CANCEL"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
