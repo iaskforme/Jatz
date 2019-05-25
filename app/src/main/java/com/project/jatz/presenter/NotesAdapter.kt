@@ -1,23 +1,22 @@
 package com.project.jatz.presenter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.project.jatz.R
 import com.project.jatz.model.NoteItem
 import com.project.jatz.view.activities.NotesActivity
 
 /**
  *
+ * Class in charge of bridging View and Data for the Notes view
+ *
+ * @param list: NoteItem list
+ * @param Listener: OnClickListener for Note items
  */
 class NotesAdapter(val itemList: ArrayList<NoteItem>, val clickListener: (NoteItem) -> Unit = { noteItem : NoteItem-> NotesActivity.clickedNote(noteItem) }): RecyclerView.Adapter<NotesAdapter.NoteViewHolder>(){
-
-    private var removedItemPosition: Int = 0
-    private var removedItem: NoteItem? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.note_item, parent, false)
@@ -26,7 +25,7 @@ class NotesAdapter(val itemList: ArrayList<NoteItem>, val clickListener: (NoteIt
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        var currentItem: NoteItem = itemList.get(position)
+        val currentItem: NoteItem = itemList.get(position)
 
         holder.title.text = currentItem.getTitle()
         holder.description.text = currentItem.getDescription()
@@ -37,18 +36,13 @@ class NotesAdapter(val itemList: ArrayList<NoteItem>, val clickListener: (NoteIt
         return itemList.size
     }
 
-    fun removeItem(viewHolder: RecyclerView.ViewHolder){
-        removedItemPosition = viewHolder.adapterPosition
-        removedItem = itemList[viewHolder.adapterPosition]
-
-        itemList.removeAt(viewHolder.adapterPosition)
-        notifyItemRemoved(viewHolder.adapterPosition)
-
-
-        Snackbar.make(viewHolder.itemView,"${removedItem!!.getTitle().toString()} removed", Snackbar.LENGTH_LONG).setAction("UNDO"){
-            itemList.add(removedItemPosition, removedItem!!)
-            notifyItemInserted(removedItemPosition)
-        }.show()
+    /**
+     * Gets the note at an specific position
+     *
+     * @param Position: index that determines the note position
+     */
+    fun getNoteAt(position: Int): NoteItem{
+        return itemList.get(position)
     }
 
     class  NoteViewHolder (var rowView: View): RecyclerView.ViewHolder(rowView){

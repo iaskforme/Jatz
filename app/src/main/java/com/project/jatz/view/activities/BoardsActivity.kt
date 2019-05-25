@@ -61,6 +61,17 @@ class BoardsActivity : AppCompatActivity(), ConnectionReceiver.ConnectionReceive
         App.instance.setConnectionListener(this)
     }
 
+    override fun onRestart() {
+        super.onRestart()
+
+        val boardsQuery = ParseQuery.getQuery(BoardItem::class.java)
+        boardsQuery .whereEqualTo("createdBy", ParseUser.getCurrentUser())
+
+        boardsQuery.findInBackground{ boardList, e ->
+            boards_recycler_view.adapter = BoardsAdapter(ArrayList(boardList))
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.boards_bottom_app_bar, menu)
         return super.onCreateOptionsMenu(menu)

@@ -17,6 +17,7 @@
                 android:layout_marginTop="?android:attr/actionBarSize"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorMainPrimary"
                 android:padding="5dp"
                 android:scrollbars="vertical">
         </androidx.recyclerview.widget.RecyclerView>

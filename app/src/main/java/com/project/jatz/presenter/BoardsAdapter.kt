@@ -1,6 +1,5 @@
 package com.project.jatz.presenter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,13 @@ import com.project.jatz.R
 import com.project.jatz.model.BoardItem
 import com.project.jatz.view.activities.BoardsActivity
 
+/**
+ *
+ * Class in charge of bridging View and Data for the Boards view
+ *
+ * @param list: BoardItem list
+ * @param Listener: OnClickListener for Board items
+ */
 class BoardsAdapter(private val boardList: ArrayList<BoardItem>, val clickListener: (BoardItem) -> Unit = { boardItem : BoardItem ->BoardsActivity.clickedBoard(boardItem)}) : RecyclerView.Adapter<BoardsAdapter.BoardViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardViewHolder {
@@ -19,7 +25,7 @@ class BoardsAdapter(private val boardList: ArrayList<BoardItem>, val clickListen
     }
 
     override fun onBindViewHolder(holder: BoardViewHolder, position: Int) {
-        var currentItem: BoardItem = boardList.get(position)
+        val currentItem: BoardItem = boardList.get(position)
 
         holder.title.text = currentItem.getTitle()
         holder.bind(boardList[position], clickListener)

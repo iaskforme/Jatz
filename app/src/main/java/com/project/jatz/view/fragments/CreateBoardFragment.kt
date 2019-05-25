@@ -22,6 +22,7 @@ import com.project.jatz.presenter.NotesAdapter
 import com.project.jatz.utils.Util
 import com.project.jatz.view.activities.NotesActivity
 import kotlinx.android.synthetic.main.activity_boards.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 /**
@@ -68,11 +69,8 @@ class CreateBoardFragment: DialogFragment() {
                 if (boardEditText.text.toString().isEmpty()){
                     boardEditText.setError("Missing board's name")
                 }else{
-                    val board = BoardItem()
-                    board.setTitle(boardEditText.text.toString())
-                    board.setUser(ParseUser.getCurrentUser())
 
-                    board.save()
+                    uploadBoard(boardEditText)
 
                     val boardsQuery = ParseQuery.getQuery(BoardItem::class.java)
                     boardsQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)

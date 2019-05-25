@@ -28,6 +28,18 @@
                 android:layout_width="match_parent">
         </androidx.viewpager.widget.ViewPager>
 
+
+        <ProgressBar
+                android:id="@+id/main_proggress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:indeterminate="true"
+                android:background="@android:color/transparent"
+                android:indeterminateTint="@color/colorAccent"
+                style="?android:attr/progressBarStyleLarge"/>
+
         <!--BottomAppBar that replaces the normal ActionBar, contains Button and others-->
         <com.google.android.material.bottomappbar.BottomAppBar
                 android:id="@+id/main_bottom_appbar"

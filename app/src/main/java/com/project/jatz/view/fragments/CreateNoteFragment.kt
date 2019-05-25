@@ -18,22 +18,20 @@ import com.project.jatz.model.BoardItem
 import com.project.jatz.model.NoteItem
 import com.project.jatz.presenter.NotesAdapter
 import com.project.jatz.utils.Util
-import com.project.jatz.view.activities.NotesActivity
-import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * Class that inherits from DialogFragment and contains the parameters that allow the future creation of one. In this case for the creation of a note.
  */
 class CreateNoteFragment() : DialogFragment(){
 
-    var currentBoard: String = ""
+    var currentBoard: String? = ""
     var currentPage: Int? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         super.onCreateView(inflater, container, savedInstanceState)
 
-        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.ThemeOverlay_Material)
 
         val rootView = inflater.inflate(R.layout.fragment_create_note, container, false)
@@ -74,56 +72,54 @@ class CreateNoteFragment() : DialogFragment(){
         boardQuery.whereEqualTo("title", currentBoard)
 
         boardQuery.getFirstInBackground{boardItem, e ->
-            val noteQuery = ParseQuery.getQuery(NoteItem::class.java)
-            noteQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
-            noteQuery.whereEqualTo("parentBoard", boardItem)
-            noteQuery.whereEqualTo("title", title.text.toString())
+            if (e == null){
+                val noteQuery = ParseQuery.getQuery(NoteItem::class.java)
+                noteQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+                noteQuery.whereEqualTo("parentBoard", boardItem)
+                noteQuery.whereEqualTo("title", title.text.toString())
 
-            noteQuery.getFirstInBackground{ noteItem, a ->
-                if (noteItem != null){
-                    title.setError("There is a note with this name")
-                }else{
-                    if(title.text.toString().isEmpty()){
-                        title.setError("Fill in the field")
+                noteQuery.getFirstInBackground{ noteItem, a ->
+                    if (noteItem != null){
+                        title.setError("There is a note with this name")
                     }else{
-                        title.setError(null)
-
-                        if(description.text.toString().isEmpty()){
-                            description.setError("Fill in the field")
+                        if(title.text.toString().isEmpty()){
+                            title.setError("Fill in the field")
                         }else{
-                            description.setError(null)
+                            title.setError(null)
 
-                            if(comment.text.toString().isEmpty()){
-                                comment.setError("Fill in the field")
+                            if(description.text.toString().isEmpty()){
+                                description.setError("Fill in the field")
                             }else{
-                                comment.setError(null)
+                                description.setError(null)
 
-                                when(currentPage){
-                                    0 -> {
-                                        uploadNote(title,description, comment, "todo")
-                                        updateToDoAdapter()
-                                        dismiss()
-                                    }
+                                    when(currentPage){
+                                        0 -> {
+                                            uploadNote(title,description, comment, "todo")
+                                            updateToDoAdapter()
+                                            dismiss()
+                                        }
 
-                                    1 -> {
-                                        uploadNote(title, description, comment, "inprogress")
-                                        updateInProgressAdapter()
-                                        dismiss()
-                                    }
+                                        1 -> {
+                                            uploadNote(title, description, comment, "inprogress")
+                                            updateInProgressAdapter()
+                                            dismiss()
+                                        }
 
-                                    2 -> {
-                                        uploadNote(title, description, comment, "done")
-                                        updateDoneAdapter()
-                                        dismiss()
+                                        2 -> {
+                                            uploadNote(title, description, comment, "done")
+                                            updateDoneAdapter()
+                                            dismiss()
+                                        }
                                     }
                                 }
                             }
-                        }
 
+                        }
                     }
+                }else{
+                    e.printStackTrace()
                 }
             }
-        }
     }
 
 
@@ -173,11 +169,11 @@ class CreateNoteFragment() : DialogFragment(){
                         val layoutManager = LinearLayoutManager(activity)
                         val adapter = NotesAdapter(ArrayList(notesList))
 
+                        FragmentToDo.adapter = adapter
                         FragmentToDo.recyclerView!!.adapter = adapter
                         FragmentToDo.recyclerView!!.layoutManager = layoutManager
 
                         FragmentToDo.recyclerView!!.adapter!!.notifyDataSetChanged()
-                        Log.e("tag","ACTUALIZANDO")
 
                     }else{
                         Util.showToast(activity, a.message.toString())
@@ -209,6 +205,7 @@ class CreateNoteFragment() : DialogFragment(){
                         val layoutManager = LinearLayoutManager(activity)
                         val adapter = NotesAdapter(ArrayList(notesList))
 
+                        FragmentInProgress.adapter = adapter
                         FragmentInProgress.recyclerView!!.adapter = adapter
                         FragmentInProgress.recyclerView!!.layoutManager = layoutManager
 

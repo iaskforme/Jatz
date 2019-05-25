@@ -4,6 +4,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
+/**
+ *
+ * Class in charge of bridging View and Data for the Boards view
+ *
+ * @param Manager: Manages pages or fragments
+ */
 class TabsAdapter(manager: FragmentManager): FragmentPagerAdapter(manager){
 
     val fragmentList: ArrayList<Fragment> = ArrayList()

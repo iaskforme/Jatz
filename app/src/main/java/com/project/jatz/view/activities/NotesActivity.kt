@@ -11,12 +11,15 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.util.Log
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.parse.ParseQuery
 import com.parse.ParseUser
 import com.project.jatz.database.App
+import com.project.jatz.model.BoardItem
 import com.project.jatz.model.NoteItem
 import com.project.jatz.utils.ConnectionReceiver
 import com.project.jatz.utils.Util
@@ -27,7 +30,6 @@ class NotesActivity : AppCompatActivity(), ConnectionReceiver.ConnectionReceiver
     val fragmentAdapter = TabsAdapter(supportFragmentManager)
     var connectionReceiver = ConnectionReceiver()
 
-
     companion object{
         var todoFragment = FragmentToDo()
         var progressFragment = FragmentInProgress()
@@ -35,7 +37,7 @@ class NotesActivity : AppCompatActivity(), ConnectionReceiver.ConnectionReceiver
 
         var msupportFragmentManager: FragmentManager? = null
 
-        var currentBoard: String = ""
+        var currentBoard: String? = ""
 
         var bundleEditNote = Bundle()
         var bundleCreateNote = Bundle()
@@ -100,6 +102,10 @@ class NotesActivity : AppCompatActivity(), ConnectionReceiver.ConnectionReceiver
                 startActivity(loginIntent)
                 finish()
             }
+            R.id.bottom_app_delete -> {
+                main_proggress_bar.visibility = View.VISIBLE
+                deleteBoard()
+            }
         }
 
         return true
@@ -135,7 +141,7 @@ class NotesActivity : AppCompatActivity(), ConnectionReceiver.ConnectionReceiver
     }
 
     /**
-     * Tabs creation troguh fragments. This won't change at any time.
+     * Tabs creation through fragments. This won't change at any time.
      */
     private fun createTabs(adapter: TabsAdapter){
         adapter.addFragment(todoFragment, "To Do")
@@ -179,7 +185,7 @@ class NotesActivity : AppCompatActivity(), ConnectionReceiver.ConnectionReceiver
      */
     private fun getCurrentBoardIntent(){
         val intent = intent
-        currentBoard = intent.extras.getString("currentBoard")
+        currentBoard = intent.extras!!.getString("currentBoard")
     }
 
     /**
@@ -192,5 +198,46 @@ class NotesActivity : AppCompatActivity(), ConnectionReceiver.ConnectionReceiver
         todoFragment.arguments = bundle
         progressFragment.arguments = bundle
         doneFragment.arguments = bundle
+    }
+
+    /**
+     * Function that is called by Delete Board Menu item and deletes the board an its notes
+     */
+    private fun deleteBoard(){
+
+        val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
+        boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+        boardQuery.whereEqualTo("title", currentBoard)
+
+        boardQuery.getFirstInBackground{ boardItem, e ->
+            if(e == null ){
+
+                val notesQuery = ParseQuery.getQuery(NoteItem::class.java)
+                notesQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+                notesQuery.whereEqualTo("parentBoard", boardItem)
+
+                notesQuery.findInBackground{ noteList, f ->
+                    if (f == null){
+                        for (x in noteList){
+                            x.delete()
+                        }
+
+                        boardItem.delete()
+
+                        val boardsQuery = ParseQuery.getQuery(BoardItem::class.java)
+                        boardsQuery .whereEqualTo("createdBy", ParseUser.getCurrentUser())
+
+                        boardsQuery.findInBackground{ boardList, g ->
+
+                            val intent = Intent(this, BoardsActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
+                }
+            }else{
+                e.printStackTrace()
+            }
+        }
     }
 }

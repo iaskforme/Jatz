@@ -3,14 +3,12 @@ package com.project.jatz.view.fragments
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.parse.ParseException
 import com.parse.ParseQuery
@@ -20,28 +18,28 @@ import com.project.jatz.model.BoardItem
 import com.project.jatz.model.NoteItem
 import com.project.jatz.presenter.NotesAdapter
 import com.project.jatz.utils.Util
-import com.project.jatz.view.activities.NotesActivity
 
 /**
  * Class that inherits from DialogFragment and contains the parameters that allow the edition of the note clicked.
  */
 class EditNoteFragment: DialogFragment(){
 
-    var currentNote: String = ""
-    var currentBoard: String = ""
+    var currentNote: String? = ""
+    var currentBoard: String? = ""
     var currentPage: Int? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         super.onCreateView(inflater, container, savedInstanceState)
 
-        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.ThemeOverlay_Material)
 
         val rootView = inflater.inflate(R.layout.fragment_edit_note, container, false)
 
         val saveText: TextView = rootView.findViewById(R.id.fragmenteditnote_save_textview)
         val cancelText: TextView = rootView.findViewById(R.id.fragmenteditnote_cancel_textview)
+        val deleteText: TextView = rootView.findViewById(R.id.fragmenteditnote_delete_textview)
         val titleEditText: EditText = rootView.findViewById(R.id.fragmenteditnote_title_edittext)
         val descriptionEditText: EditText = rootView.findViewById(R.id.fragmenteditnote_description_edittext)
         val commentEditText: EditText = rootView.findViewById(R.id.fragmenteditnote_comment_edittext)
@@ -55,7 +53,7 @@ class EditNoteFragment: DialogFragment(){
         loadNoteData(titleEditText, descriptionEditText, commentEditText)
 
         saveText.setOnClickListener {
-            createNote(titleEditText, descriptionEditText, commentEditText, currentPage)
+            saveteNote(titleEditText, descriptionEditText, commentEditText)
 
         }
 
@@ -63,9 +61,20 @@ class EditNoteFragment: DialogFragment(){
             dismiss()
         }
 
+        deleteText.setOnClickListener {
+            deleteNote(titleEditText, descriptionEditText, commentEditText)
+        }
+
         return rootView
     }
 
+    /**
+     * Loading data of the
+     *
+     * @param title: EditText
+     * @param description: EditText
+     * @param comment: EditText
+     */
     private fun loadNoteData(title: EditText, description: EditText, comment: EditText){
         val noteQuery = ParseQuery.getQuery(NoteItem::class.java)
         noteQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
@@ -80,8 +89,14 @@ class EditNoteFragment: DialogFragment(){
         }
     }
 
-
-    private fun createNote(title: EditText, description: EditText, comment: EditText, currentPager: Int?){
+    /**
+     * Saving note with new parameters and updating adapters
+     *
+     * @param title: EditText
+     * @param description: EditText
+     * @param comment: EditText
+     */
+    private fun saveteNote(title: EditText, description: EditText, comment: EditText){
 
         val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
         boardQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
@@ -141,6 +156,57 @@ class EditNoteFragment: DialogFragment(){
         }
     }
 
+    /**
+     * Deleting note and updating adapters
+     *
+     * @param title: EditText
+     * @param description: EditText
+     * @param comment: EditText
+     */
+    private fun deleteNote(title: EditText, description: EditText, comment: EditText) {
+
+        val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
+        boardQuery.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE)
+        boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+        boardQuery.whereEqualTo("title", currentBoard)
+
+        boardQuery.getFirstInBackground { boardItem, e ->
+            val noteQuery = ParseQuery.getQuery(NoteItem::class.java)
+            noteQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
+            noteQuery.whereEqualTo("parentBoard", boardItem)
+            noteQuery.whereEqualTo("title", title.text.toString())
+
+            noteQuery.getFirstInBackground { noteItem, a ->
+
+                noteItem.deleteInBackground {
+                    when(currentPage) {
+                        0 -> {
+                            updateToDoAdapter()
+                            dismiss()
+                        }
+
+                        1 -> {
+                            updateInProgressAdapter()
+                            dismiss()
+                        }
+
+                        2 -> {
+                            updateDoneAdapter()
+                            dismiss()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Uploading note to the database. This must be called after getting he parameters from the view
+     *
+     * @param title: EditText
+     * @param description: EditText
+     * @param comment: EditText
+     */
     private fun uploadNote(title: EditText, description: EditText, comment: EditText){
 
         val noteQuery = ParseQuery.getQuery(NoteItem::class.java)
@@ -159,7 +225,9 @@ class EditNoteFragment: DialogFragment(){
         }
     }
 
-
+    /**
+     * Updating ToDo page adapter with the new items
+     */
     private fun updateToDoAdapter(){
         val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
         boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
@@ -194,6 +262,9 @@ class EditNoteFragment: DialogFragment(){
         }
     }
 
+    /**
+     * Updating InProgress page adapter with the new items
+     */
     private fun updateInProgressAdapter(){
         val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
         boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
@@ -227,6 +298,9 @@ class EditNoteFragment: DialogFragment(){
         }
     }
 
+    /**
+     * Updating Done page adapter with the new items
+     */
     private fun updateDoneAdapter(){
         val boardQuery = ParseQuery.getQuery(BoardItem::class.java)
         boardQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser())
