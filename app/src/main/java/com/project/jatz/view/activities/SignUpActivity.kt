@@ -106,9 +106,10 @@ class SignUpActivity: AppCompatActivity(), ConnectionReceiver.ConnectionReceiver
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show()
 
                 val intent = Intent(this, LoginActivity::class.java)
+                overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out)
                 startActivity(intent)
                 finish()
-                overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out)
+
 
             } else {
                 signup_proggress_bar.visibility = View.INVISIBLE
