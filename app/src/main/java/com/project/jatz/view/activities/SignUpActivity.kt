@@ -108,7 +108,7 @@ class SignUpActivity: AppCompatActivity(), ConnectionReceiver.ConnectionReceiver
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
+                overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out)
 
             } else {
                 signup_proggress_bar.visibility = View.INVISIBLE

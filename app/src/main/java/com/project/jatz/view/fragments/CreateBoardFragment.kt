@@ -85,17 +85,12 @@ class CreateBoardFragment: DialogFragment() {
                         }
 
                         updateAdapter(boardList)
-
                         dismiss()
-
                     }catch (a: ParseException){
                         a.printStackTrace()
                     }
                 }
             }
-
-
-
         }catch (e: ParseException){
             e.printStackTrace()
         }
