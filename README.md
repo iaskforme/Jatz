@@ -1,5 +1,4 @@
 # Jatz
-Scrum Android App
 
 Jatz is the project I presented for my final dissertation at my school. In short terms is an Android note taking app based on **Scrum**
 and apps like [Trello](https://trello.com/) or [Evernote](https://evernote.com/intl/es).
